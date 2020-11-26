@@ -1,0 +1,38 @@
+{
+    "name": "KuaiJi",
+    "author": "ChengAnXu",
+    "variables":
+      {
+        "emph": "hsl(100, 100%, 60%)",
+        "head": "#00ffff",
+        "green1": "hsl(114, 25%, 50%)"
+      },
+    "rules":
+      [
+        {
+          "name": "Emph",
+          "scope": "em",
+          "foreground": "var(emph)"
+        },
+        {
+          "name": "KuaiJiSource",
+          "scope": "source.kj",
+          "foreground": "var(green1)"
+        },
+        {
+            "name": "Header",
+            "scope": "head",
+            "foreground": "var(head)"
+        },
+        {
+            "name": "Ps",
+            "scope": "em.ps",
+            "font_style": "bold"
+        },
+        {
+            "name": "Label",
+            "scope": "em.label",
+            "font_style": "italic"
+        }
+      ]
+}

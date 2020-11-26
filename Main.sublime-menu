@@ -1,0 +1,14 @@
+[
+{
+	"id": "kuai-ji",
+	"caption": "KuaiJi",
+	"children":
+	[
+		{
+			"id" : "find-in-file",
+			"caption" : "Find In File",
+			"command" : "find_in_file"
+		}
+	]
+}
+]
