@@ -20,6 +20,7 @@ class FindInFileCommand(sublime_plugin.TextCommand):
 
 
 		titleRegions_list=self.view.find_all(titleRegex)
+		self.view.add_regions("titles", titleRegions_list, "head")
 		if not titleRegions_list:
 			sublime.status_message("Can't find any title")
 		else:
