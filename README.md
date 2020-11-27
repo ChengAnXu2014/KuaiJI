@@ -7,8 +7,8 @@ Create a new file, copy the texts below into the new file, then save the new fil
 Then you can use this plugin via shortcut: 'alt+m' or main menu: 'KuaiJi => Find In File'.
 
 ## setting:
-'kuaiji_title_prefix': '<<',
-'kuaiji_title_sufix': '>>',
+'kuaiji_title_prefix': '<<',  
+'kuaiji_title_sufix': '>>',  
 indicate the specifier of title.
 
 ## customization:
