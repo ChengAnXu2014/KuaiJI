@@ -12,7 +12,11 @@ Then you can use this plugin via shortcut: 'alt+m' or main menu: 'KuaiJi => Find
 indicate the specifier of title.
 
 ## customization:
-The only command of this plugin is 'find_in_file', or in humpmode 'FindInFile', you can use it to customize your own shortcut and menu item.
+The only command of this plugin is  
+`find_in_file`  
+or in humpmode:  
+`FindInFile`
+you can use it to customize your own shortcut and menu item.
 
 
 
