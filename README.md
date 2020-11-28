@@ -7,7 +7,7 @@
 1. 下载：
 点击右上的橙色大按钮**Clone or download**,在弹出的下拉菜单中点击最下方的**Download ZIP**
 2. 安装：
-解压下载的ZIP文件，你会得到一个名为*KuaiJi*的文件夹；通过菜单**Preferences => Browse Packages...**打开*Packages*目录；把*KuaiJi*文件夹复制到*Packages*目录下就可以了。
+解压下载的ZIP文件，你会得到一个名为*KuaiJi*的文件夹；通过菜单**Preferences => Browse Packages**打开*Packages*目录；把*KuaiJi*文件夹复制到*Packages*目录下就可以了。
 
 ## 功能
 本插件通过`<<>>`识别*标题*，在一个快捷面板中列出当前文档中所有的*标题*。当用户选中某个*标题*时，文档会自动跳转到该*标题*所在位置(*标题*在正中央)，并会用显眼的颜色高亮显示*标题*。
