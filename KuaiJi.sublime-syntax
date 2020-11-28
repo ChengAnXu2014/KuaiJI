@@ -11,6 +11,8 @@ contexts:
       scope: em.ps
     - match: '^ [^ ].+?:'
       scope: em.label
+    - match: '`[-_0-9A-z =<>{}\[\]():;,.]+?`'
+      scope: code
     - match: '^<<py$'
       push: Packages/Python/Python.sublime-syntax
       with_prototype:

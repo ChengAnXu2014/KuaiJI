@@ -10,6 +10,12 @@
     "rules":
       [
         {
+          "name": "Code",
+          "scope": "code",
+          "foreground": "var(blue6)",
+          "font_style": "italic"
+        },
+        {
           "name": "Emph",
           "scope": "em",
           "foreground": "var(emph)"
