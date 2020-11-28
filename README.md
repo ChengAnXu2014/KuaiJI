@@ -1,29 +1,48 @@
 # KuaiJi
-A Sublime Text 3 Plugin.
-
-## prepare before use:
-Open Sublime Text 3, select 'Mariana' scheme via main menu: 'Preferences => Color Scheme'.
-Create a new file, copy the texts below into the new file, then save the new file as 'View.pkj'.
-Then you can use this plugin via shortcut: 'alt+m' or main menu: 'KuaiJi => Find In File'.
-
-## setting:
-'kuaiji_title_prefix': '<<',  
-'kuaiji_title_sufix': '>>',  
-indicate the specifier of title.
-
-## customization:
-The only command of this plugin is  
-`find_in_file`  
-or in humpmode:  
-`FindInFile`
-you can use it to customize your own shortcut and menu item.
+一个可以帮助你快速查阅笔记的 Sublime Text 3 插件。
+当笔记文件内容太多太杂时，查阅笔记会是一件非常麻烦的事情。本插件可以让你方便地在笔记的不同段落之间跳转，比在查阅某些官方在线文档时通过链接跳转还要方便得多。还支持用不同的颜色和字体样式化显示标题、批注等特殊内容，让阅读更方便。
 
 
+## 下载和安装
+1. 下载：
+点击右上的橙色大按钮`Clone or download`,在弹出的下拉菜单中点击最下方的`Download ZIP`
+2. 安装：
+解压下载的ZIP文件，你会得到一个名为`KuaiJi`的文件夹；通过菜单`Preferences => Browse Packages...`打开`Packages`目录；把`KuaiJi`文件夹复制到`Packages`目录下就可以了。
 
-## texts to copy:
+## 功能
+本插件通过`<<>>`识别`标题`，在一个快捷面板中列出当前文档中所有的`标题`。当用户选中某个`标题`时，文档会自动跳转到该`标题`所在位置(`标题`在正中央)，并会用显眼的颜色高亮显示`标题`。
+
+
+## 设置
+本插件有两个设置项：  
 ```
- This is a title:
-ps:This is a emphasize info
+'kuaiji_title_prefix': '<<',  
+'kuaiji_title_sufix': '>>'  
+```
+分别指定了`标题`前缀和`标题`后缀  
+
+
+## 命令
+本插件只有一个命令：  
+`find_in_file`  
+也就是驼峰模式下的：  
+`FindInFile`  
+
+
+## 用法
+在使用本插件之前，要先做一些准备工作：  
+1. 打开Sublime Text 3，通过菜单`Preferences => Color Scheme...`启用`mariana`主题。  
+2. 新建一个文件，把下面提供的内容复制进去，并将其保存为`View.pkj`。  
+3. 通过菜单`KuaiJi => Find In File`或快捷键`alt+m`调用本插件。  
+-----
+你会看到一个快捷面板中列出了`View.pkj`中所有的`标题`，随便点击一个`标题`条目，文档就会自动跳转到该`标题`所在位置。
+
+
+## `View.pkj`内容
+```
+<<这是一个标题>>
+ 这是一个小标题:
+ps:这是一个批注
 
 
 
