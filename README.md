@@ -4,9 +4,9 @@
 
 
 ## 下载和安装
-1. 下载：
+1. 下载：  
 点击右上的橙色大按钮**Clone or download**,在弹出的下拉菜单中点击最下方的**Download ZIP**
-2. 安装：
+2. 安装：  
 解压下载的ZIP文件，你会得到一个名为*KuaiJi*的文件夹；通过菜单**Preferences => Browse Packages**打开*Packages*目录；把*KuaiJi*文件夹复制到*Packages*目录下就可以了。
 
 ## 功能
