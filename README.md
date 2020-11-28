@@ -31,8 +31,8 @@
 
 ## 用法
 在使用本插件之前，要先做一些准备工作：  
-1. 打开Sublime Text 3，通过菜单**Preferences => Color Scheme...**启用*mariana*主题。  
-2. 新建一个文件，把下面提供的内容复制进去，并将其保存为`View.pkj`。  
+1. 打开Sublime Text 3，通过菜单**Preferences => Color Scheme**启用*mariana*主题。  
+2. 新建一个文件，把下面提供的内容复制进去，并将其保存为*View.pkj*。  
 3. 通过菜单**KuaiJi => Find In File**或快捷键`alt+m`调用本插件。  
 -----
 你会看到一个快捷面板中列出了*View.pkj*中所有的*标题*，随便点击一个*标题*条目，文档就会自动跳转到该*标题*所在位置。
