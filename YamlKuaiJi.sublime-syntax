@@ -14,3 +14,5 @@ contexts:
           scope: em.ps
         - match: '^ [^ ].+?:'
           scope: em.label
+        - match: '`[-_0-9A-z =<>{}\[\]():;,.]+?`'
+          scope: code
