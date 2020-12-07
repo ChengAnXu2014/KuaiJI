@@ -1,4 +1,0 @@
-# -*- coding: UTF-16 LE -*-
-
- 猜测:
-1. Python 中类的 attribute 的值都是数字、字符串、列表、元组、字典等普通数据；而 property 都是函数、类或 flag、name 等功能对象。

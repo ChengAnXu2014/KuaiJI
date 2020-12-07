@@ -1,9 +1,0 @@
-{
-   "*": {
-      "*": [
-         "package_events",
-         "pathtools",
-         "watchdog"
-      ]
-   }
-}

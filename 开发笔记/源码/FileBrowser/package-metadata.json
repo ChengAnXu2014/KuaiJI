@@ -1,1 +1,0 @@
-{"dependencies": ["package_events", "pathtools", "watchdog"], "platforms": ["*"], "version": "0.8.4", "description": "Ditch sidebar and browse your files in a normal tab with keyboard, like a pro!", "sublime_text": "*", "url": "https://github.com/aziz/SublimeFileBrowser"}

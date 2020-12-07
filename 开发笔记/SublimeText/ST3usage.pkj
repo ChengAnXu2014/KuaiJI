@@ -1,2 +1,0 @@
-`command palette`和`console`不是一回事。
-`command palette`是一个用于快速调用命令的快捷面板，但是只有事先 '注册' 过的命令才能用。

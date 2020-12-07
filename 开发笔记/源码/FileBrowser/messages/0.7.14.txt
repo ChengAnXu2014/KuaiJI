@@ -1,3 +1,0 @@
-0.7.14
-
-• CHANGED: when open file in default app set working directory to its parent
