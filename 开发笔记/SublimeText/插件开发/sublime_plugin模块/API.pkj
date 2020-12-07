@@ -1,0 +1,1045 @@
+ 
+Download Buy Support News Forum 
+Documentation
+API Reference 
+General Information
+Example Plugins
+Plugin Lifecycle
+Threading
+Units and Coordinates
+Types
+Core Components
+sublime Module
+Sheet Class
+View Class
+Selection Class
+Region Class
+Phantom Class
+PhantomSet Class
+Edit Class
+Window Class
+Settings Class
+Plugin Extension Points
+sublime_plugin Module 
+EventListener Class 
+ViewEventListener Class 
+ApplicationCommand Class 
+WindowCommand Class 
+TextCommand Class 
+TextInputHandler Class 
+ListInputHandler Class 
+General Information
+Example Plugins
+Several pre-made plugins come with Sublime Text, you can find them in the Default package: 
+Packages/Default/exec.py Uses phantoms to display errors inline 
+Packages/Default/font.py Shows how to work with settings 
+Packages/Default/goto_line.py Prompts the user for input, then updates the selection 
+Packages/Default/mark.py Uses add_regions() to add an icon to the gutter 
+Packages/Default/show_scope_name.py Uses a popup to show the scope names at the caret 
+Packages/Default/arithmetic.py Accepts an input from the user when run via the Command Palette 
+Plugin Lifecycle
+At importing time, plugins may not call any API functions, with the exception of sublime.version(), sublime.platform(), sublime.architecture() and sublime.channel(). 
+If a plugin defines a module level function plugin_loaded(), this will be called when the API is ready to use. Plugins may also define plugin_unloaded(), to get notified just before the plugin is unloaded. 
+Threading
+All API functions are thread-safe, however keep in mind that from the perspective of code running in an alternate thread, application state will be changing while the code is running. 
+Units and Coordinates
+API functions that accept or return coordinates or dimensions do so using device-independent pixel (dip) values. While in some cases these will be equivalent to device pixels, this is often not the case. Per the CSS specification, minihtml treats the px unit as device-independent. 
+Types
+This documentation generally refers to simply Python data types. Some type names are classes documented herein, however there are also a few custom type names that refer to construct with specific semantics: 
+location: a tuple of (str, str, (int, int)) that contains information about a location of a symbol. The first string is the absolute file path, the second is the file path relative to the project, the third element is a two-element tuple of the row and column. 
+point: an int that represents the offset from the beginning of the editor buffer. The View methods text_point() and rowcol() allow converting to and from this format. 
+value: any of the Python data types bool, int, float, str, list or dict. 
+dip: a float that represents a device-independent pixel. 
+vector: a tuple of (dip, dip) representing x and y coordinates. 
+CommandInputHandler: a subclass of either TextInputHandler or ListInputHandler. 
+sublime Module
+Methods
+Return Value
+Description
+set_timeout(callback, delay)
+None
+Runs the callback in the main thread after the given delay (in milliseconds). Callbacks with an equal delay will be run in the order they were added. 
+set_timeout_async(callback, delay)
+None
+Runs the callback on an alternate thread after the given delay (in milliseconds). 
+error_message(string)
+None
+Displays an error dialog to the user. 
+message_dialog(string)
+None
+Displays a message dialog to the user. 
+ok_cancel_dialog(string, <ok_title>)
+bool
+Displays an ok / cancel question dialog to the user. If ok_title is provided, this may be used as the text on the ok button. Returns True if the user presses the ok button. 
+yes_no_cancel_dialog(string, <yes_title>, <no_title>)
+int
+Displays a yes / no / cancel question dialog to the user. If yes_title and/or no_title are provided, they will be used as the text on the corresponding buttons on some platforms. Returns sublime.DIALOG_YES, sublime.DIALOG_NO or sublime.DIALOG_CANCEL. 
+load_resource(name)
+str
+Loads the given resource. The name should be in the format Packages/Default/Main.sublime-menu. 
+load_binary_resource(name)
+bytes
+Loads the given resource. The name should be in the format Packages/Default/Main.sublime-menu. 
+find_resources(pattern)
+[str]
+Finds resources whose file name matches the given pattern. 
+encode_value(value, <pretty>)
+str
+Encode a JSON compatible value into a string representation. If pretty is set to True, the string will include newlines and indentation. 
+decode_value(string)
+value
+Decodes a JSON string into an object. If the string is invalid, a ValueError will be thrown. 
+expand_variables(value, variables)
+value
+Expands any variables in the string value using the variables defined in the dictionary variables. value may also be a list or dict, in which case the structure will be recursively expanded. Strings should use snippet syntax, for example: expand_variables("Hello, ${name}", {"name": "Foo"}) 
+load_settings(base_name)
+Settings
+Loads the named settings. The name should include a file name and extension, but not a path. The packages will be searched for files matching the base_name, and the results will be collated into the settings object. Subsequent calls to load_settings() with the base_name will return the same object, and not load the settings from disk again. 
+save_settings(base_name)
+None
+Flushes any in-memory changes to the named settings object to disk. 
+windows()
+[Window]
+Returns a list of all the open windows. 
+active_window()
+Window
+Returns the most recently used window. 
+packages_path()
+str
+Returns the path where all the user's loose packages are located. 
+installed_packages_path()
+str
+Returns the path where all the user's .sublime-package files are located. 
+cache_path()
+str
+Returns the path where Sublime Text stores cache files. 
+get_clipboard(<size_limit>)
+str
+Returns the contents of the clipboard. size_limit is there to protect against unnecessarily large data, defaults to 16,777,216 characters 
+set_clipboard(string)
+None
+Sets the contents of the clipboard. 
+score_selector(scope, selector)
+int
+Matches the selector against the given scope, returning a score. A score of 0 means no match, above 0 means a match. Different selectors may be compared against the same scope: a higher score means the selector is a better match for the scope. 
+run_command(string, <args>)
+None
+Runs the named ApplicationCommand with the (optional) given args. 
+get_macro()
+[dict]
+Returns a list of the commands and args that compromise the currently recorded macro. Each dict will contain the keys command and args. 
+log_commands(flag)
+None
+Controls command logging. If enabled, all commands run from key bindings and the menu will be logged to the console. 
+log_input(flag)
+None
+Controls input logging. If enabled, all key presses will be logged to the console. 
+log_result_regex(flag)
+None
+Controls result regex logging. This is useful for debugging regular expressions used in build systems. 
+version()
+str
+Returns the version number 
+platform()
+str
+Returns the platform, which may be "osx", "linux" or "windows" 
+arch()
+str
+Returns the CPU architecture, which may be "x32" or "x64" 
+sublime.Sheet Class
+Represents a content container, i.e. a tab, within a window. Sheets may contain a View, or an image preview. 
+Methods
+Return Value
+Description
+id()
+int
+Returns a number that uniquely identifies this sheet. 
+window()
+Window 
+or
+None
+Returns the window containing the sheet. May be None if the sheet has been closed. 
+view()
+View 
+or
+None
+Returns the view contained within the sheet. May be None if the sheet is an image preview, or the view has been closed. 
+sublime.View Class
+Represents a view into a text buffer. Note that multiple views may refer to the same buffer, but they have their own unique selection and geometry. 
+Methods
+Return Value
+Description
+id()
+int
+Returns a number that uniquely identifies this view. 
+buffer_id()
+int
+Returns a number that uniquely identifies the buffer underlying(作为...的底层) this view. 
+is_primary()
+bool
+If the view is the primary view into a file. Will only be False if the user has opened multiple views into a file. 
+file_name()
+str
+The full name file the file associated with the buffer, or None if it doesn't exist on disk. 
+name()
+str
+The name assigned to the buffer, if any 
+set_name(name)
+None
+Assigns a name to the buffer 
+is_loading()
+bool
+Returns True if the buffer is still loading from disk, and not ready for use. 
+is_dirty()
+bool
+Returns True if there are any unsaved modifications to the buffer. 
+is_read_only()
+bool
+Returns True if the buffer may not be modified. 
+set_read_only(value)
+None
+Sets the read only property on the buffer. 
+is_scratch()
+bool
+Returns True if the buffer is a scratch buffer. Scratch buffers never report as being dirty. 
+set_scratch(value)
+None
+Sets the scratch property on the buffer. 
+settings()
+Settings
+Returns a reference to the view's settings object. Any changes to this settings object will be private to this view. 
+window()
+Window
+Returns a reference to the window containing the view. 
+run_command(string, <args>)
+None
+Runs the named TextCommand with the (optional) given args. 
+size()
+int
+Returns the number of character in the file. 
+substr(region)
+str
+Returns the contents of the region as a string. 
+substr(point)
+str
+Returns the character to the right of the point. 
+insert(edit, point, string)
+int
+Inserts the given string in the buffer at the specified point. Returns the number of characters inserted: this may be different if tabs are being translated into spaces in the current buffer. 
+erase(edit, region)
+None
+Erases the contents of the region from the buffer. 
+replace(edit, region, string)
+None
+Replaces the contents of the region with the given string. 
+sel()
+Selection
+Returns a reference to the selection. 
+line(point)
+Region
+Returns the line that contains the point. 
+line(region)
+Region
+Returns a modified copy of region such that it starts at the beginning of a line, and ends at the end of a line. Note that it may span several lines. 
+full_line(point)
+Region
+As line(), but the region includes the trailing newline character, if any. 
+full_line(region)
+Region
+As line(), but the region includes the trailing newline character, if any. 
+lines(region)
+[Region]
+Returns a list of lines (in sorted order) intersecting the region. 
+split_by_newlines(region)
+[Region]
+Splits the region up such that each region returned exists on exactly one line. 
+word(point)
+Region
+Returns the word that contains the point. 
+word(region)
+Region
+Returns a modified copy of region such that it starts at the beginning of a word, and ends at the end of a word. Note that it may span several words. 
+classify(point)
+int
+Classifies point, returning a bitwise OR of zero or more of these flags: 
+sublime.CLASS_WORD_START
+sublime.CLASS_WORD_END
+sublime.CLASS_PUNCTUATION_START
+sublime.CLASS_PUNCTUATION_END
+sublime.CLASS_SUB_WORD_START
+sublime.CLASS_SUB_WORD_END
+sublime.CLASS_LINE_START
+sublime.CLASS_LINE_END
+sublime.CLASS_EMPTY_LINE
+find_by_class(point, forward, classes, <separators>)
+Region
+Finds the next location after point that matches the given classes. If forward is False, searches backwards instead of forwards. classes is a bitwise OR of the sublime.CLASS_XXX flags. separators may be passed in, to define what characters should be considered to separate(<动>分隔,<形>单独的) words. 
+expand_by_class(point, classes, <separators>)
+Region
+Expands point to the left and right, until each side lands on a location that matches classes. classes is a bitwise OR of the sublime.CLASS_XXX flags. separators may be passed in, to define what characters should be considered to separate(<动>分隔,<形>单独的) words. 
+expand_by_class(region, classes, <separators>)
+Region
+Expands region to the left and right, until each side lands on a location that matches classes. classes is a bitwise OR of the sublime.CLASS_XXX flags. separators may be passed in, to define what characters should be considered to separate(<动>分隔,<形>单独的) words. 
+find(pattern, start_point, <flags>)
+Region
+Returns the first region matching the regex pattern, starting from start_point, or None if it can't be found. The optional flags parameter may be sublime.LITERAL, sublime.IGNORECASE, or the two ORed together. 
+find_all(pattern, <flags>, <format>, <extractions>)
+[Region]
+Returns all (non-overlapping) regions matching the regex pattern. The optional flags parameter may be sublime.LITERAL, sublime.IGNORECASE, or the two ORed together. If a format string is given, then all matches will be formatted with the formatted string and placed into the extractions list. 
+rowcol(point)
+(int, int)
+Calculates the 0-based line and column numbers of the point. 
+text_point(row, col)
+int
+Calculates the character offset of the given, 0-based, row and col. Note that col is interpreted as the number of characters to advance past the beginning of the row. 
+set_syntax_file(syntax_file)
+None
+Changes the syntax used by the view. syntax_file should be a name along the lines of Packages/Python/Python.tmLanguage. To retrieve the current syntax, use view.settings().get('syntax'). 
+extract_scope(point)
+Region
+Returns the extent of the syntax scope name assigned to the character at the given point. 
+scope_name(point)
+str
+Returns the syntax scope name assigned to the character at the given point. 
+match_selector(point, selector)
+bool
+Checks the selector against the scope at the given point, returning a bool if they match. 
+score_selector(point, selector)
+int
+Matches the selector against the scope at the given point, returning a score. A score of 0 means no match, above 0 means a match. Different selectors may be compared against the same scope: a higher score means the selector is a better match for the scope. 
+find_by_selector(selector)
+[Region]
+Finds all regions in the file matching the given selector, returning them as a list. 
+show(location, <show_surrounds>)
+None
+Scroll the view to show the given location, which may be a point, Region or Selection. 
+show_at_center(location)
+None
+Scroll the view to center on the location, which may be a point or Region. 
+visible_region()
+Region
+Returns the currently visible area of the view. 
+viewport_position()
+vector
+Returns the offset of the viewport in layout coordinates. 
+set_viewport_position(vector, <animate<)
+None
+Scrolls the viewport to the given layout position. 
+viewport_extent()
+vector
+Returns the width and height of the viewport. 
+layout_extent()
+vector
+Returns the width and height of the layout. 
+text_to_layout(point)
+vector
+Converts a text point to a layout position 
+text_to_window(point)
+vector
+Converts a text point to a window position 
+layout_to_text(vector)
+point
+Converts a layout position to a text point 
+layout_to_window(vector)
+vector
+Converts a layout position to a window position 
+window_to_layout(vector)
+vector
+Converts a window position to a layout position 
+window_to_text(vector)
+point
+Converts a window position to a text point 
+line_height()
+dip
+Returns the light height used in the layout 
+em_width()
+dip
+Returns the typical character width used in the layout 
+add_regions(key, [regions], <scope>, <icon>, <flags>)
+None
+Add a set of regions to the view. If a set of regions already exists with the given key, they will be overwritten. The scope is used to source a color to draw the regions in, it should be the name of a scope, such as "comment" or "string". If the scope is empty, the regions won't be drawn. 
+The optional icon name, if given, will draw the named icons in the gutter next to each region. The icon will be tinted using the color associated with the scope. Valid icon names are dot, circle and bookmark. The icon name may also be a full package relative path, such as Packages/Theme - Default/dot.png. 
+The optional flags parameter is a bitwise combination of: 
+sublime.DRAW_EMPTY: Draw empty regions with a vertical bar. By default, they aren't drawn at all. 
+sublime.HIDE_ON_MINIMAP: Don't show the regions on the minimap. 
+sublime.DRAW_EMPTY_AS_OVERWRITE: Draw empty regions with a horizontal bar instead of a vertical one. 
+sublime.DRAW_NO_FILL: Disable filling the regions, leaving only the outline. 
+sublime.DRAW_NO_OUTLINE: Disable drawing the outline of the regions. 
+sublime.DRAW_SOLID_UNDERLINE: Draw a solid underline below the regions. 
+sublime.DRAW_STIPPLED_UNDERLINE: Draw a stippled underline below the regions. 
+sublime.DRAW_SQUIGGLY_UNDERLINE: Draw a squiggly underline below the regions. 
+sublime.PERSISTENT: Save the regions in the session. 
+sublime.HIDDEN: Don't draw the regions. 
+The underline styles are exclusive, either zero or one of them should be given. If using an underline, sublime.DRAW_NO_FILL and sublime.DRAW_NO_OUTLINE should generally be passed in. 
+get_regions(key)
+[Region]
+Return the regions associated with the given key, if any 
+erase_regions(key)
+None
+Removed the named regions 
+set_status(key, value)
+None
+Adds the status key to the view. The value will be displayed in the status bar, in a comma separated list of all status values, ordered by key. Setting the value to the empty string will clear the status. 
+get_status(key)
+str
+Returns the previously assigned value associated with the key, if any. 
+erase_status(key)
+None
+Clears the named status. 
+command_history(index, <modifying_only>)
+(str, dict, int)
+Returns the command name, command arguments, and repeat count for the given history entry, as stored in the undo / redo stack. 
+Index 0 corresponds to the most recent command, -1 the command before that, and so on. Positive values for index indicate to look in the redo stack for commands. If the undo / redo history doesn't extend far enough, then (None, None, 0) will be returned. 
+Setting modifying_only to True (the default is False) will only return entries that modified the buffer. 
+change_count()
+int
+Returns the current change count. Each time the buffer is modified, the change count is incremented. The change count can be used to determine if the buffer has changed since the last it was inspected. 
+fold([regions])
+bool
+Folds the given regions, returning False if they were already folded 
+fold(region)
+bool
+Folds the given region, returning False if it was already folded 
+unfold(region)
+[Region]
+Unfolds all text in the region, returning the unfolded regions 
+unfold([regions])
+[Region]
+Unfolds all text in the regions, returning the unfolded regions 
+encoding()
+str
+Returns the encoding currently associated with the file 
+set_encoding(encoding)
+None
+Applies a new encoding to the file. This encoding will be used the next time the file is saved. 
+line_endings()
+str
+Returns the line endings used by the current file. 
+set_line_endings(line_endings)
+None
+Sets the line endings that will be applied when next saving. 
+overwrite_status()
+bool
+Returns the overwrite status, which the user normally toggles via the insert key. 
+set_overwrite_status(enabled)
+None
+Sets the overwrite status. 
+symbols()
+[(Region, str)]
+Extract all the symbols defined in the buffer. 
+show_popup_menu(items, on_done, <flags>)
+None
+Shows a pop up menu at the caret, to select an item in a list. on_done will be called once, with the index of the selected item. If the pop up menu was cancelled, on_done will be called with an argument of -1. 
+items is a list of strings. 
+flags it currently unused. 
+show_popup(content, <flags>, <location>, <max_width>, <max_height>, <on_navigate>, <on_hide>)
+None
+Shows a popup displaying HTML content. 
+flags is a bitwise combination of the following: 
+sublime.COOPERATE_WITH_AUTO_COMPLETE. Causes the popup to display next to the auto complete menu 
+sublime.HIDE_ON_MOUSE_MOVE. Causes the popup to hide when the mouse is moved, clicked or scrolled 
+sublime.HIDE_ON_MOUSE_MOVE_AWAY. Causes the popup to hide when the mouse is moved (unless towards the popup), or when clicked or scrolled 
+The default location of -1 will display the popup at the cursor, otherwise a text point should be passed. 
+max_width and max_height set the maximum dimensions for the popup, after which scroll bars will be displayed. 
+on_navigate is a callback that should accept a string contents of the href attribute on the link the user clicked. 
+on_hide is called when the popup is hidden. 
+update_popup(content)
+None
+Updates the contents of the currently visible popup. 
+is_popup_visible()
+bool
+Returns if the popup is currently shown. 
+hide_popup()
+None
+Hides the popup. 
+is_auto_complete_visible()
+bool
+Returns if the auto complete menu is currently visible. 
+style()
+dict
+Returns a dict of the global style settings for the view. All colors are normalized to the six character hex form with a leading hash, e.g. #ff0000. 
+style_for_scope(scope_name)
+dict
+Accepts a string scope name and returns a dict of style information, include the keys foreground, bold, italic, source_line, source_column and source_file. If the scope has a background color set, the key background will be present. The foreground and background colors are normalized to the six character hex form with a leading hash, e.g. #ff0000. 
+set_reference_document(reference)
+None
+Uses the string reference to calculate the initial diff for the incremental diff 
+reset_reference_document()
+None
+Clears the state of the incremental diff for the view 
+sublime.Selection Class
+Maintains a set of Regions, ensuring that none overlap. The regions are kept in sorted order. 
+Methods
+Return Value
+Description
+clear()
+None
+Removes all regions. 
+add(region)
+None
+Adds the given region. It will be merged with any intersecting regions already contained within the set. 
+add_all(regions)
+None
+Adds all regions in the given list or tuple. 
+subtract(region)
+None
+Subtracts the region from all regions in the set. 
+contains(region)
+bool
+Returns True iff the given region is a subset. 
+sublime.Region Class
+Represents an area of the buffer. Empty regions, where a == b are valid. 
+Constructors
+Description
+Region(a, b)
+Creates a Region with initial values a and b. 
+Properties
+Type
+Description
+a
+int
+The first end of the region. 
+b
+int
+The second end of the region. May be less that a, in which case the region is a reversed one. 
+xpos
+int
+The target horizontal position of the region, or -1 if undefined. Effects behavior when pressing the up or down keys. 
+Methods
+Return Value
+Description
+begin()
+int
+Returns the minimum of a and b. 
+end()
+int
+Returns the maximum of a and b. 
+size()
+int
+Returns the number of characters spanned by the region. Always >= 0. 
+empty()
+bool
+Returns True iff begin() == end(). 
+cover(region)
+Region
+Returns a Region spanning both this and the given regions. 
+intersection(region)
+Region
+Returns the set intersection of the two regions. 
+intersects(region)
+bool
+Returns True iff self == region or both include one or more positions in common. 
+contains(region)
+bool
+Returns True iff the given region is a subset. 
+contains(point)
+bool
+Returns True iff begin() <= point <= end(). 
+sublime.Phantom Class
+Represents an HTML-based decoration to display non-editable content interspersed in a View. Used with PhantomSet to actually add the phantoms to the View. Once a Phantom has been constructed and added to the View, changes to the attributes will have no effect. 
+Constructors
+Description
+Phantom(region, content, layout, <on_navigate>)
+Creates a phantom attached to a region. The content is HTML to be processed by minihtml. 
+layout must be one of: 
+sublime.LAYOUT_INLINE: Display the phantom in between the region and the point following. 
+sublime.LAYOUT_BELOW: Display the phantom in space below the current line, left-aligned with the region. 
+sublime.LAYOUT_BLOCK(<名>块,<动>阻止): Display the phantom in space below the current line, left-aligned with the beginning of the line. 
+on_navigate is an optional callback that should accept a single string parameter, that is the href attribute of the link clicked. 
+sublime.PhantomSet Class
+A collection that manages Phantoms and the process of adding them, updating them and removing them from the View. 
+Constructors
+Description
+PhantomSet(view, <key>)
+Creates a PhantomSet attached to a view. key is a string to group Phantoms together. 
+Methods
+Return Value
+Description
+update(phantoms)
+None
+phantoms should be a list of phantoms. 
+The .region attribute of each existing phantom in the set will be updated. New phantoms will be added to the view and phantoms not in phantoms list will be deleted. 
+sublime.Edit Class
+Edit objects have no functions, they exist to group buffer modifications. 
+Edit objects are passed to TextCommands, and can not be created by the user. Using an invalid Edit object, or an Edit object from a different View, will cause the functions that require them to fail. 
+Methods
+Return Value
+Description
+(no methods)
+
+
+sublime.Window Class
+Methods
+Return Value
+Description
+id()
+int
+Returns a number that uniquely identifies this window. 
+new_file()
+View
+Creates a new file. The returned view will be empty, and its is_loaded() method will return True. 
+open_file(file_name, <flags>)
+View
+Opens the named file, and returns the corresponding view. If the file is already opened, it will be brought to the front. Note that as file loading is asynchronous, operations on the returned view won't be possible until its is_loading() method returns False. 
+The optional flags parameter is a bitwise combination of: 
+sublime.ENCODED_POSITION: Indicates the file_name should be searched for a :row or :row:col suffix 
+sublime.TRANSIENT: Open the file as a preview only: it won't have a tab assigned it until modified 
+find_open_file(file_name)
+View
+Finds the named file in the list of open files, and returns the corresponding View, or None if no such file is open. 
+active_sheet()
+Sheet
+Returns the currently focused sheet. 
+active_view()
+View
+Returns the currently edited view. 
+active_sheet_in_group(group)
+Sheet
+Returns the currently focused sheet in the given group. 
+active_view_in_group(group)
+View
+Returns the currently edited view in the given group. 
+sheets()
+[Sheet]
+Returns all open sheets in the window. 
+sheets_in_group(group)
+[Sheet]
+Returns all open sheets in the given group. 
+views()
+[View]
+Returns all open views in the window. 
+views_in_group(group)
+[View]
+Returns all open views in the given group. 
+num_groups()
+int
+Returns the number of view groups in the window. 
+active_group()
+int
+Returns the index of the currently selected group. 
+focus_group(group)
+None
+Makes the given group active. 
+focus_sheet(sheet)
+None
+Switches to the given sheet. 
+focus_view(view)
+None
+Switches to the given view. 
+get_sheet_index(sheet)
+(int, int)
+Returns the group, and index within the group of the sheet. Returns -1 if not found. 
+set_sheet_index(sheet, group, index)
+None
+Moves the sheet to the given group and index. 
+get_view_index(view)
+(int, int)
+Returns the group, and index within the group of the view. Returns -1 if not found. 
+set_view_index(view, group, index)
+None
+Moves the view to the given group and index. 
+status_message(string)
+None
+Show a message in the status bar. 
+is_menu_visible()
+bool
+Returns True if the menu is visible. 
+set_menu_visible(flag)
+None
+Controls if the menu is visible. 
+is_sidebar_visible()
+bool
+Returns True if the sidebar will be shown when contents are available. 
+set_sidebar_visible(flag)
+None
+Sets the sidebar to be shown or hidden when contents are available. 
+get_tabs_visible()
+bool
+Returns True if tabs will be shown for open files. 
+set_tabs_visible(flag)
+None
+Controls if tabs will be shown for open files. 
+is_minimap_visible()
+bool
+Returns True if the minimap is enabled. 
+set_minimap_visible(flag)
+None
+Controls the visibility of the minimap. 
+is_status_bar_visible()
+bool
+Returns True if the status bar will be shown. 
+set_status_bar_visible(flag)
+None
+Controls the visibility of the status bar. 
+folders()
+[str]
+Returns a list of the currently open folders. 
+project_file_name()
+str
+Returns name of the currently opened project file, if any. 
+project_data()
+dict
+Returns the project data associated with the current window. The data is in the same format as the contents of a .sublime-project file. 
+set_project_data(data)
+None
+Updates the project data associated with the current window. If the window is associated with a .sublime-project file, the project file will be updated on disk, otherwise the window will store the data internally. 
+run_command(string, <args>)
+None
+Runs the named WindowCommand with the (optional) given args. This method is able to run any sort of command, dispatching the command via input focus. 
+show_quick_panel(items, on_done, <flags>, <selected_index>, <on_highlighted>)
+None
+Shows a quick panel, to select an item in a list. on_done will be called once, with the index of the selected item. If the quick panel was cancelled, on_done will be called with an argument of -1. 
+items may be a list of strings, or a list of string lists. In the latter case, each entry in the quick panel will show multiple rows. 
+flags is a bitwise OR of sublime.MONOSPACE_FONT and sublime.KEEP_OPEN_ON_FOCUS_LOST 
+on_highlighted, if given, will be called every time the highlighted item in the quick panel is changed. 
+show_input_panel(caption, initial_text, on_done, on_change, on_cancel)
+View
+Shows the input panel, to collect a line of input from the user. on_done and on_change, if not None, should both be functions that expect a single string argument. on_cancel should be a function that expects no arguments. The view used for the input widget is returned. 
+create_output_panel(name, <unlisted>)
+View
+Returns the view associated with the named output panel, creating it if required. The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix. 
+The optional unlisted parameter is a boolean to control if the output panel should be listed in the panel switcher. 
+find_output_panel(name)
+View 
+or
+None
+Returns the view associated with the named output panel, or None if the output panel does not exist. 
+destroy_output_panel(name)
+None
+Destroys the named output panel, hiding it if currently open. 
+active_panel()
+str 
+or
+None
+Returns the name of the currently open panel, or None if no panel is open. Will return built-in panel names (e.g. "console", "find", etc) in addition to output panels. 
+panels()
+[str]
+Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels. 
+lookup_symbol_in_index(symbol)
+[location]
+Returns all locations where the symbol is defined across files in the current project. 
+lookup_symbol_in_open_files(symbol)
+[location]
+Returns all locations where the symbol is defined across open files. 
+extract_variables()
+dict
+Returns a dictionary of strings populated with contextual keys: 
+packages, platform, file, file_path, file_name, file_base_name, file_extension, folder, project, project_path, project_name, project_base_name, project_extension. This dict is suitable for passing to sublime.expand_variables(). 
+sublime.Settings Class
+Methods
+Return Value
+Description
+get(name, <default>)
+value
+Returns the named setting, or default if it's not defined. If not passed, default will have a value of None. 
+set(name, value)
+None
+Sets the named setting. Only primitive types, lists, and dicts are accepted. 
+erase(name)
+None
+Removes the named setting. Does not remove it from any parent Settings. 
+has(name)
+bool
+Returns True iff the named option exists in this set of Settings or one of its parents. 
+add_on_change(key, on_change)
+None
+Register a callback to be run whenever a setting in this object is changed. 
+clear_on_change(key)
+None
+Remove all callbacks registered with the given key. 
+sublime_plugin Module
+Methods
+Return Value
+Description
+(no methods)
+
+
+
+
+
+
+
+
+《《sublime_plugin.ViewEventListener Class》》
+A class that provides similar event handling to EventListener, but bound to a specific view. Provides class method-based filtering to control what views objects are created for. 
+The view is passed as a single parameter to the constructor. The default implementation makes the view available via self.view. 
+Class Methods
+Return Value
+Description
+is_applicable(settings)
+bool
+A @classmethod that receives a Settings object and should return a bool indicating if this class applies to a view with those settings 
+applies_to_primary_view_only()
+bool
+A @classmethod that should return a bool indicating if this class applies only to the primary view for a file. A view is considered primary if it is the only, or first, view into a file. 
+Methods
+Return Value
+Description
+on_load()
+None
+Called when the file is finished loading. 
+on_load_async()
+None
+Called when the file is finished loading. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+on_pre_close()
+None
+Called when a view is about to be closed. The view will still be in the window at this point. 
+on_close()
+None
+Called when a view is closed (note, there may still be other views into the same buffer). 
+on_pre_save()
+None
+Called just before a view is saved. 
+on_pre_save_async()
+None
+Called just before a view is saved. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+on_post_save()
+None
+Called after a view has been saved. 
+on_post_save_async()
+None
+Called after a view has been saved. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+on_modified()
+None
+Called after changes have been made to the view. 
+on_modified_async()
+None
+Called after changes have been made to the view. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+on_selection_modified()
+None
+Called after the selection has been modified in the view. 
+on_selection_modified_async()
+None
+Called after the selection has been modified in the view. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+on_activated()
+None
+Called when a view gains input focus. 
+on_activated_async()
+None
+Called when the view gains input focus. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+on_deactivated()
+None
+Called when the view loses input focus. 
+on_deactivated_async()
+None
+Called when the view loses input focus. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+on_hover(point, hover_zone)
+None
+Called when the user's mouse hovers over the view for a short period(一段时间). 
+point is the closest point in the view to the mouse location. The mouse may not actually be located adjacent(邻近的) based on the value of hover_zone: 
+sublime.HOVER_TEXT: When the mouse is hovered over text. 
+sublime.HOVER_GUTTER: When the mouse is hovered over the gutter. 
+sublime.HOVER_MARGIN: When the mouse is hovered in whitespace to the right of a line. 
+on_query_context(key, operator, operand, match_all)
+bool 
+or
+None
+Called when determining to trigger a key binding with the given context key. If the plugin knows how to respond(回应) to the context, it should return either True of False. If the context is unknown, it should return None. 
+operator is one of: 
+sublime.OP_EQUAL: Is the value of the context equal to the operand? 
+sublime.OP_NOT_EQUAL: Is the value of the context not equal to the operand? 
+sublime.OP_REGEX_MATCH: Does the value of the context match the regex given in operand? 
+sublime.OP_NOT_REGEX_MATCH: Does the value of the context not match the regex given in operand? 
+sublime.OP_REGEX_CONTAINS: Does the value of the context contain a substring matching the regex given in operand? 
+sublime.OP_NOT_REGEX_CONTAINS: Does the value of the context not contain a substring matching the regex given in operand? 
+match_all should be used if the context relates to the selections: does every selection have to match (match_all == True), or is at least one matching enough (match_all == False)? 
+on_query_completions(prefix, locations)
+list
+,
+tuple 
+or
+None
+Called whenever completions are to be presented to the user. The prefix is a unicode string of the text to complete. 
+locations is a list of points. Since this method is called for all completions no matter the syntax, self.view.match_selector(point, relevant_scope) should be called to determine if the point is relevant. 
+The return value must be one of the following formats: 
+None: no completions are provided 
+
+return None
+
+A list of 2-element lists/tuples. The first element is a unicode string of the completion trigger, the second is the unicode replacement text. 
+
+return [["me1", "method1()"], ["me2", "method2()"]]
+
+The trigger may contain a tab character (\t) followed by a hint to display in the right-hand side of the completion box. 
+
+return [
+    ["me1\tmethod", "method1()"],
+    ["me2\tmethod", "method2()"]
+]
+
+The replacement text may contain dollar-numeric fields such as a snippet does, e.g. $0, $1. 
+
+return [
+    ["fn", "def ${1:name}($2) { $0 }"],
+    ["for", "for ($1; $2; $3) { $0 }"]
+]
+
+A 2-element tuple with the first element being the list format documented above, and the second element being bit flags from the following list: 
+sublime.INHIBIT_WORD_COMPLETIONS: prevent Sublime Text from showing completions based on the contents of the view 
+sublime.INHIBIT_EXPLICIT_COMPLETIONS: prevent Sublime Text from showing completions based on .sublime-completions files 
+
+return (
+    [
+        ["me1", "method1()"],
+        ["me2", "method2()"]
+    ],
+    sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS
+)
+
+on_text_command(command_name, args)
+(str, dict)
+Called when a text command is issued(公布). The listener may return a (command, arguments) tuple to rewrite the command, or None to run the command unmodified. 
+on_post_text_command(command_name, args)
+None
+Called after a text command has been executed(执行). 
+sublime_plugin.ApplicationCommand Class
+Methods
+Return Value
+Description
+run(<args>)
+None
+Called when the command is run. 
+is_enabled(<args>)
+bool
+Returns True if the command is able to be run at this time. The default implementation simply always returns True. 
+is_visible(<args>)
+bool
+Returns True if the command should be shown in the menu at this time. The default implementation always returns True. 
+is_checked(<args>)
+bool
+Returns True if a checkbox should be shown next to the menu item. The .sublime-menu file must have the checkbox attribute set to true for this to be used. 
+description(<args>)
+str
+Returns a description of the command with the given arguments. Used in the menu, if no caption is provided. Return None to get the default description. 
+input(args)
+CommandInputHandler 
+or
+None
+If this returns something other than None, the user will be prompted for an input before the command is run in the Command Palette. 
+sublime_plugin.WindowCommandClass
+WindowCommands are instantiated once per window. The Window object may be retrieved via self.window 
+Methods
+Return Value
+Description
+run(<args>)
+None
+Called when the command is run. 
+is_enabled(<args>)
+bool
+Returns True if the command is able to be run at this time. The default implementation simply always returns True. 
+is_visible(<args>)
+bool
+Returns True if the command should be shown in the menu at this time. The default implementation always returns True. 
+description(<args>)
+str
+Returns a description of the command with the given arguments. Used in the menu, if no caption is provided. Return None to get the default description. 
+input(args)
+CommandInputHandler 
+or
+None
+If this returns something other than None, the user will be prompted for an input before the command is run in the Command Palette. 
+sublime_plugin.TextCommand Class
+TextCommands are instantiated once per view. The View object may be retrieved via self.view 
+Methods
+Return Value
+Description
+run(edit, <args>)
+None
+Called when the command is run. 
+is_enabled(<args>)
+bool
+Returns True if the command is able to be run at this time. The default implementation simply always returns True. 
+is_visible(<args>)
+bool
+Returns True if the command should be shown in the menu at this time. The default implementation always returns True. 
+description(<args>)
+str
+Returns a description of the command with the given arguments. Used in the menus, and for Undo / Redo descriptions. Return None to get the default description. 
+want_event()
+bool
+Return True to receive an event argument when the command is triggered by a mouse action. The event information allows commands to determine which portion of the view was clicked on. The default implementation returns False. 
+input(args)
+CommandInputHandler 
+or
+None
+If this returns something other than None, the user will be prompted for an input before the command is run in the Command Palette. 
+sublime_plugin.TextInputHandler Class
+TextInputHandlers can be used to accept textual input in the Command Palette. Return a subclass of this from the input() method of a command. 
+Methods
+Return Value
+Description
+name()
+str
+The command argument name this input handler is editing. Defaults to foo_bar for an input handler named FooBarInputHandler 
+placeholder()
+str
+Placeholder text is shown in the text entry box before the user has entered anything. Empty by default. 
+initial_text()
+str
+Initial text shown in the text entry box. Empty by default. 
+preview(text)
+str 
+or
+sublime.Html(str)
+Called whenever the user changes the text in the entry box. The returned value (either plain text or HTML) will be shown in the preview area of the Command Palette. 
+validate(text)
+bool
+Called whenever the user presses enter in the text entry box. Return False to disallow the current value. 
+cancel()
+None
+Called when the input handler is canceled, either by the user pressing backspace or escape. 
+confirm(text)
+None
+Called when the input is accepted, after the user has pressed enter and the text has been validated. 
+next_input(args)
+CommandInputHandler 
+or
+None
+Returns the next input after the user has completed this one. May return None to indicate no more input is required, or sublime_plugin.BackInputHandler() to indicate that the input handler should be poped off the stack instead. 
+description(text)
+str
+The text to show in the Command Palette when this input handler is not at the top of the input handler stack. Defaults to the text the user entered. 
+sublime_plugin.ListInputHandler Class
+ListInputHandlers can be used to accept a choice input from a list items in the Command Palette. Return a subclass of this from the input() method of a command. 
+Methods
+Return Value
+Description
+name()
+str
+The command argument name this input handler is editing. Defaults to foo_bar for an input handler named FooBarInputHandler 
+list_items()
+[str] 
+or
+[(str,value)]
+The items to show in the list. If returning a list of (str, value) tuples, then the str will be shown to the user, while the value will be used as the command argument. 
+Optionally return a tuple of (list_items, selected_item_index) to indicate an initial selection. 
+placeholder()
+str
+Placeholder text is shown in the text entry box before the user has entered anything. Empty by default. 
+initial_text()
+str
+Initial text shown in the filter box. Empty by default. 
+preview(value)
+str 
+or
+sublime.Html(str)
+Called whenever the user changes the selected item. The returned value (either plain text or HTML) will be shown in the preview area of the Command Palette. 
+validate(value)
+bool
+Called whenever the user presses enter in the text entry box. Return False to disallow the current value. 
+cancel()
+None
+Called when the input handler is canceled, either by the user pressing backspace or escape. 
+confirm(value)
+None
+Called when the input is accepted, after the user has pressed enter and the item has been validated. 
+next_input(args)
+CommandInputHandler 
+or
+None
+Returns the next input after the user has completed this one. May return None to indicate no more input is required, or sublime_plugin.BackInputHandler() to indicate that the input handler should be poped off the stack instead. 
+description(value, text)
+str
+The text to show in the Command Palette when this input handler is not at the top of the input handler stack. Defaults to the text of the list item the user selected. 
+© Sublime HQ Pty Ltd 
+Woollahra, Sydney. 

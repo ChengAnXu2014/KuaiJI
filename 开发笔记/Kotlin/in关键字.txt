@@ -1,0 +1,11 @@
+in关键字：
+fun main() {
+    myToInt('a')
+    myToInt('6')
+}
+fun myToInt(c:Char){
+    if(c !in '0'..'9')
+        println("$c:不是数字字符")
+    else
+        println(c.toInt())
+}

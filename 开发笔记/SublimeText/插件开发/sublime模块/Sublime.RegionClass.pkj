@@ -1,0 +1,112 @@
+《《构建语法》》
+region=sublime.Region(a, b)
+
+
+
+《《属性》》
+a
+int
+起始偏移地址
+
+b
+int
+结束偏移地址
+ps:起始偏移地址a可以大于结束偏移地址b，如果a大于b，则region是一个反序region,其索引顺序与阅读顺序相反
+
+《《xpos???》》
+int
+目标水平坐标，由0开始;未定义时为-1
+此属性会影响用上下键移动输入光标时的表现
+the target horizontal position of the region, or -1 if undefined. effects(影响) behavior when pressing the up or down keys.
+
+
+
+《《begin()》》
+参数:无
+
+返回值:int
+
+描述:反回属性a和b中值最小的一个，也就是阅读顺序上region的开头
+
+
+
+《《end()》》
+参数:无
+返回值:int
+
+描述:返回属性a和b中值最大的一个，也就是阅读顺序上region的结尾
+
+
+
+《《size()》》
+参数:无
+
+返回值:int
+
+描述:返回region中包含的字符个数
+
+
+
+《《empty()》》
+参数:无
+
+返回值:bool:
+为 True 则表示region为空
+为 False 则表示region不为空
+
+描述:判断region是否为空，即属性a是否等于属性b
+
+
+
+《《cover(argRegion)》》
+参数:argRegion
+
+返回值:retRegion
+
+描述:返回含盖本方法所属的region:baseRegion与argRegion的region:retRegion
+retRegion的a属性是baseRegion与argRegion的begin()方法返回值中最小的一个
+retRegion的b属性是baseRegion与argRegion的end()方法返回值中最大的一个
+
+
+
+《《intersection(argRegion)》》
+参数:argRegion
+
+返回值:retRegion
+
+描述:返回本方法所属的region:baseRegion与argRegion的交集region:retRegion,如果存在的话
+retRegion的a属性是baseRegion与argRegion的begin()方法返回值中最大的一个
+retRegion的b属性是baseRegion与argRegion的end()方法返回值中最小的一个
+
+
+
+《《intersects(argRegion)》》
+参数:argRegion
+
+返回值:bool:
+为 True 表示baseRegion与argRegion存在交集
+为 False 表示baseRegion与argRegion不存在交集
+
+描述:判断本方法所属region:baseRegion与argRegion是否存在交集
+
+
+
+《《contains(argRegion)》》
+参数:argRegion
+
+返回值:bool:
+为 True 表示argRegion是baseRegion的子集
+为 False 表示argRegion不是baseRegion的子集
+
+描述:判断argRegion是否是本方法所属region:baseRegion的子集
+
+
+
+《《contains(point)》》
+参数:point
+
+返回值:bool:
+为 True 表示baseRegion包含point
+为 False 表示baseRegion不包含point
+
+描述:判断本方法所属region:baseRegion是否包含point

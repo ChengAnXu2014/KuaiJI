@@ -1,0 +1,30 @@
+插件生命周期:
+在importing time,插件也许不会call所有API函数,with the 例外 of sublime.version(),sublime.platform(),sublime.architecture(结构)和 sublime.channel(频道).
+
+如果一个插件定义了一个模块级别的函数 plugin_loaded(),它会在API准备就绪时被call.
+插件也可以定义一个 plugin_unloaded(),以便在插件卸载前得到通知.
+
+
+
+
+
+线程:
+所有API函数都是线程安全(thread-safe)的,但是在多线程交替运行时,程序(sublime)的状态是会一直变化的(被其它线程所改变).
+
+
+
+
+
+像素单位和坐标:
+接受和返回坐标和平面区域的API函数用到的像素值,都是以(device-independent-pixel)设备独立像素(dip)而不是(device-pixel)设备像素(dp)为单位.
+
+
+
+
+
+数据类型:
+此文中有大量基于Python数据类型定制的,sublime专用的数据类型:
+
+
+
+point

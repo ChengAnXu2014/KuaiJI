@@ -1,0 +1,116 @@
+selectors选择器:
+在sublime中scope names是为tokens提供元信息的语法.scopes是带"."的字符串.例如:
+keyword.control.php
+一个token可以有多个相关scope names.
+
+selector是包含用于搜索scope names的patterns的字符串.
+一个selector中可以包含多个patterns,用空格分开,例如:
+myselector="keyword keyword.control"
+color schemes, key bindings, api 和有些settings 都会用到selector.
+
+基础匹配:
+在一般情况下:
+selector的patterns和其要匹配的scope names,必须按照从左到右的顺序匹配;
+一个pattern匹配一个scope name,不能重复;
+pattern必须是完整的scope name或其从开头到"."(不包含".")的substr;
+包含多个patterns的selector,必须每个pattern匹配成功,selector才算匹配成功:
+
+scope name
+selector
+matches
+
+keyword.control.php
+keyword #从开头到第一个"."的substr
+yes
+
+keyword.control.php
+keyword.control #从开头到第二个"."的substr
+yes
+
+keyword.control.php
+control #没从开头,不能匹配.
+no
+
+keyword.control.php
+keyword.cont #开头对了,但没到".",不能匹配
+no
+
+keyword.control.php
+keyword.control.php.embedded #比完整的scope name还多了个".embedded",不能匹配.
+no
+
+source.php meta.block.php keyword.control.php
+keyword
+yes
+
+source.php meta.block.php keyword.control.php
+meta keyword
+yes
+
+source.php meta.block.php keyword.control.php
+keyword meta #第一个pattern"keyword"匹配了"keyword.control.php";
+no #meta只能匹配"keyword.control.php"右边的scope name.
+
+
+
+
+
+
+逻辑操作符:
+
+逻辑或:"|"、","
+逻辑与:"&"
+逻辑非:"-"
+
+由"-"操作符与pattern组成的表达式"-pattern"(如:"-keyword"),是对scope names的重新复检;
+"-pattern"会用其pattern部分与scope names从头到尾重新进行匹配,pattern部分匹配成功,则整个表达式匹配失败,反之亦然;
+"-pattern"必须放在selector的patterns或用"()"括起来的pattern_group的末尾,否则会出bug.
+
+scope name
+selector
+matches
+
+source.php meta.block.php
+text | meta
+yes
+
+source.php
+text, meta
+no
+
+source.php meta.block.php keyword.control.php
+keyword & meta #"&"两侧的pattern不受顺序限制.
+yes
+
+source.php meta.block.php
+keyword & meta
+no
+
+source.php meta.block.php
+source - keyword
+yes
+
+source.php meta.block.php keyword.control.php
+source - keyword
+no
+
+
+
+
+
+
+圆括号:"()"
+对selector包含的多个scope names进行分组,逻辑操作符会作用于整个被括起来的内容:
+
+scope name
+selector
+matches
+
+source.php meta.block.php
+source - (keyword | storage)
+yes
+
+source.php meta.block.php 
+(source - source.php) | text
+no
+

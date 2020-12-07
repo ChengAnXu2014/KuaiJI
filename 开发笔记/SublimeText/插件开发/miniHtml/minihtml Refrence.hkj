@@ -1,0 +1,215 @@
+简介: 
+Sublime Text 拥有一个定制化 CSS 引擎:minihtml,用于在编辑器内显示 CSS 样式化 HTML 内容.
+HTML 内容可以在 popup_windows 和 phantoms 中显示.
+minihtml 并未支持 HTML 的全部功能,而是只支持了那些通用于各大浏览器的比较受欢迎的功能;
+绝大部分 minihtml 支持的功能,都是符合标准的,在 Sublime 内的表现和在浏览器中的表现一至.
+
+
+
+
+
+《《HTML_tags》》
+Sublime 提供了一个默认样式表,为以下 tags 提供默认样式.
+<html> 
+<head>, <style> 
+<body> 
+<h1>, <h2>, <h3>, <h4>, <h5>, <h6> 
+<div> 
+<p> 
+<ul>, <ol>, <li> 
+<b>, <strong> 
+<i>, <em> 
+<u> 
+<big>, <small> 
+<a> 
+<code>, <var>, <tt> 
+
+在 minihtml 中,以下 tags 的特殊操作是可用的:
+<a> – 可以通过 api 指定一个回调函数来处理点击事件.
+<img> – 支持 png, jpg 和 gif 三种图片格式; 以及 file://, res:// 和 data: urLs 三种地址模式.
+<ul> – <li> tags 前面会有小球状图标.
+bullets(子弹) are displayed for <li> tags 
+
+其它带有特殊操作的 tags ,例如 <input>, <button>, <table> 等的特殊操作都不可用.
+
+
+
+《《HTML_bestPractices》》
+为了方便 color_scheme 作者对 popups 和 phantoms 的外观进行细微的调整,最给你的 HTML 文件的 <body> tag 加一个唯一的 id attribute.
+然后在 body 体内加一个 <style> tag 
+within the <body> tag, add a <style> tag containing selectors that do not use the id. Leave that for selectors in color schemes(主题) to be able to override the plugin. 
+<body id="my-plugin-feature">
+    <style>
+        div.error {
+            background-color: red;
+            padding: 5px;
+        }
+    </style>
+    <div class="error"></div>
+</body>
+
+
+
+《《HTML_predefinedClasses》》
+当处理 HTML 文件时,minihtml 会自动为它的 <html> tag 加一个 class attribute ;
+class 的 value 会是 "dark" 或 "light" .
+and is designed(设计) to allow for advanced(高级) use of CSS in styling phantoms(幻影) and popups(弹窗). 
+取哪个值是由当前 color_scheme 的 背景色的 HSL 色域下的 lightness 值决定的.
+如果 lightness 值小于 0.5,则取 "dark",否则取 "light" .
+
+
+
+
+
+《《CSS_properties》》
+以下是支持的 properties 和其 values 的概览:
+display: inline, block, list-item, none 
+
+margin: positive(阳性的,正的) units
+margin-top: positive(阳性的,正的) units
+margin-right: positive(阳性的,正的) units
+margin-bottom: positive(阳性的,正的) units
+margin-left: positive(阳性的,正的) units 
+
+position: static(静止的), relative 
+top: positive(阳性的,正的) and negative(阴性的,负的) units
+right: positive(阳性的,正的) and negative(阴性的,负的) units
+bottom: positive(阳性的,正的) and negative(阴性的,负的) units
+left: positive(阳性的,正的) and negative(阴性的,负的) units 
+
+background-color: colors 
+
+font-family: comma(逗号)-separated(分隔) list of font families
+font-size: positive(阳性的,正的) units
+font-style: normal, italic
+font-weight(权重): normal, bold
+
+line-height: positive(阳性的,正的) units
+
+text-decoration(装饰): none, underline 
+
+color: colors 
+
+padding: positive(阳性的,正的) units
+padding-top: positive(阳性的,正的) units
+padding-right: positive(阳性的,正的) units
+padding-bottom: positive(阳性的,正的) units
+padding-left: positive(阳性的,正的) units 
+
+border: positive(阳性的,正的) units || border-style || colors
+border-top: positive(阳性的,正的) units || border-style || colors
+border-right: positive(阳性的,正的) units || border-style || colors
+border-bottom: positive(阳性的,正的) units || border-style || colors
+border-left: positive(阳性的,正的) units || border-style || colors 
+
+border-style: none, solid
+border-top-style: border-style
+border-right-style: border-style
+border-bottom-style: border-style
+border-left-style: border-style 
+
+border-width: positive(阳性的,正的) units
+border-top-width: positive(阳性的,正的) units
+border-right-width: positive(阳性的,正的) units
+border-bottom-width: positive(阳性的,正的) units
+border-left-width: positive(阳性的,正的) units 
+
+border-color: colors
+border-top-color: colors
+border-right-color: colors
+border-bottom-color: colors
+border-left-color: colors 
+
+border-radius(半径): positive(阳性的,正的) units
+border-top-left-radius(半径): positive(阳性的,正的) units
+border-top-right-radius(半径): positive(阳性的,正的) units
+border-bottom-right-radius(半径): positive(阳性的,正的) units
+border-bottom-left-radius(半径): positive(阳性的,正的) units 
+
+
+
+《《CSS_units》》
+Supported units of measurement(尺寸) include:
+rem
+em
+px
+pt
+rem units are recommended(推荐) because they are based on the user's font_size setting, and they will not cascade(倾泻). 
+
+
+
+《《CSS_Colors》》
+Colors may be specified via:
+named colors: white, tan(棕色), etc
+Shorthand(简写) hex: #fff
+Shorthand(简写) hex with alpha(希腊1): #fff8
+full hex: #ffffff
+full hex with alpha(希腊1): #ffffff80
+rgb functional(功能的) notation(记号): rgb(255, 255, 255)
+rgba functional(功能的) notation(记号): rgba(255, 255, 255, 0.5)
+HSL functional(功能的) notation(记号): hsl(0, 100%, 100%)
+HSLa functional(功能的) notation(记号): hsla(0, 100%, 100%, 0.5)
+transparent(透明)
+
+
+color() Mod function
+additionally(额外地), color values may be modified using the CSS Color Module(模块) Level 4 color-mod function with the following adjusters(调节器):
+alpha(希腊1)()/a()
+saturation(饱和度)()/s()
+lightness()/l()
+blend()
+blenda()
+例如:
+.error {
+    background-color: color(var(--background) alpha(希腊1)(0.25));
+}
+
+.error {
+    background-color: color(var(--background) blend(red 50%));
+}
+The color-mod function will be most useful in combination(组合) with variables.
+
+
+
+《《CSS_variables》》
+html {} 用于定义变量,变量名前要加 -- ;变量的引用要用 var(--var_name) 的格式.
+CSS variables are also supported using custom properties(属性) and the var() functional(功能的) notation(记号). Custom properties(属性) are those starting with --.
+html {
+    --fg: #f00;
+}
+
+.error {
+    background-color: var(--fg);
+}
+变量不可用于复合值的一部分,只能用于全部,如:
+padding: var(--padding_value) 是合法的;
+padding: 5 3 7 var(--padding_left) 是非法的.
+
+
+predefined variables
+when a color scheme(主题) is loaded, the background and foreground colors are set to CSS variables, along with the closest color found to a handful(一把) of basic colors. These are all set in an html { } rule set in the default CSS style sheet.
+var(--background)
+var(--foreground)
+var(--accent(重点))
+var(--redish)
+var(--orangish(橙色的))
+var(--yellowish)
+var(--greenish)
+var(--cyanish(青色的))
+var(--bluish)
+var(--purplish(紫色的))
+var(--pinkish(粉红色的))
+
+The algorithm(算法,计算程序) to pick the colors uses the HSL color space and uses several(几个,一些) heuristics(探索法,启发式) to try and pick colors that are suitable for foreground use. in the case that the automatic color selection is undesirable(不受欢迎的), color scheme(主题) authors(作者) may override the appropriate(合适的) values with their own html { } rule set contained in the popupCss or phantomCss settings.
+
+如果一个和预定义变量同名的变量在 color_scheme 中被定义,则定义值会覆盖默认值.
+if a variable with one of the predefined(预定义) names is set in the selected .sublime-color-scheme(主题), that value will be used instead of trying to find a match from the colors used in the color scheme(主题).
+
+
+
+
+
+《《Changelog》》
+build 3179
+color() mod function 中增加了 saturation()/s() 和 lightness()/l() adjusters .
+增加了 var(--cyanish):青色 和 var(--accent):重点 两个预定义变量.

@@ -1,0 +1,53 @@
+ 
+《《简介》》
+Sublime Merge有一个命令行工具'smerge' ，可以通过命令行与repositories进行交互。
+
+
+
+《《Setup》》
+Windows:
+把你的Sublime Merge安装目录加入系统环境变量'path';
+默认的安装目录为'C:\Program Files\Sublime Merge to your %PATH%'
+
+Mac:
+You'll want to add a symlink to smerge. Assuming you've placed Sublime Merge in the Applications folder, and that you have a ~/bin directory in your path, you can run: 
+ln -s "/Applications/Sublime Merge.app/Contents/SharedSupport/bin/smerge" ~/bin/smerge
+
+Linux:
+smerge should already be available by default. However, it won't be if you're using a tarball, so you'll want to add a symlink to sublime_merge named smerge: 
+ln -s /opt/sublime_merge/sublime_merge ~/bin/smerge
+
+
+
+《《Usage》》
+Run smerge --help: 
+Usage: smerge path               打开path指定的repository
+             or: smerge search query       在当前repository下搜索commits
+             or: smerge blame file [line]  Blame the given file in the current repository
+             or: smerge log file           显示当前repository的file历史Show the file history in the current repository
+             or: smerge mergetool          Opens the merge tool for the given files
+                   [--no-wait] [base] left right [-o merged]
+
+            -n or --new-window:      打开新窗口
+            -b or --background:      Don't activate the application
+            -h or --help:            显示帮助信息后退出
+            -v or --version:         显示版本信息后退出
+
+
+
+《《Git Merge Tool Setup》》
+The merge tool can be used to process merge conflicts within a Git repository from the command line.
+
+After configuring smerge using the instructions above, run the following from the repository directory:
+git config mergetool.smerge.cmd 'smerge mergetool "$BASE" "$LOCAL" "$REMOTE" -o "$MERGED"'
+git config mergetool.smerge.trustExitCode true
+git config merge.tool smerge
+
+
+
+《《Git Merge Tool Usage》》
+To invoke the merge tool, run git mergetool
+© Sublime HQ Pty Ltd
+Woollahra, Sydney.
+
+Follow @sublimehq 

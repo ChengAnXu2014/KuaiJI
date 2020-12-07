@@ -1,0 +1,9 @@
+区间：
+fun main() {
+    for(i in 1..9 step 3)
+        print(i)
+    for(i in 2 until 9)
+        print(i)
+    for(i in 11 downTo 9)
+        print(i)
+}

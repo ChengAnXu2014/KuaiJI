@@ -1,0 +1,63 @@
+《《get(keyName, <default>)》》
+参数:
+keyName:str,键值对的键名
+default:键值对未找到时返回的值，可以是任何类型
+
+返回值:keyValue:setting键值对的值，可能是任何类型
+如settings中未定义键名为keyName的键值对，则返回default
+如default未指定，则返回 None
+
+描述:返回settings中键名为keyName的键值对的值
+
+
+
+《《set(keyName, keyValue)》》
+参数:
+keyName:str,键值对的键名
+keyValue:键值对的值
+
+返回值:none
+
+描述:在settings中添加一个键值对，只接受 list 和 dict 类型的数据
+sets the keyNamed setting. only primitive(原始的) types, lists, and dicts are accepted. 
+
+
+
+《《erase(keyName)》》
+参数:keyName:str,键值对的键名
+
+返回值:none
+
+描述:从settings中删除键名为keyName的键值对
+removes the keyNamed setting. does not remove it from any parent settings. 
+
+
+
+《《has(keyName)》》
+参数:keyName:str,键值对的键名
+
+返回值:bool:
+为 True 则表示settings(或它的父类)中存在键名为keyName的键值对
+为 False 则表示settings(和它的父类)中都不存在键名为keyName的键值对
+
+描述:判断settings(或它的父类)中是否存在键名为keyName的键值对
+
+
+
+《《add_on_change(key, on_change)》》
+参数:
+key:键值对
+on_change:回调函数,无参数
+
+返回值:none
+
+描述:注册一个回调函数on_change,当键值对key被改变时会自动调用on_change
+
+
+
+《《clear_on_change(key)》》
+参数:key,键值对
+
+返回值:none
+
+描述:删除所有与键值对key绑定的回调函数

@@ -1,0 +1,378 @@
+syntax definitions 
+
+yml语法中字符串一般不用加引号,但是当字符串中包含 #, :, -, {, [ 或 > 时,最好加引号.
+
+文件扩展名为: .sublime-syntax
+
+
+
+
+
+《《overview》》
+sublime 的 syntax 文件采用 YAML 方法,只不过在文件开头加了一个小小的 header.
+下面是一个用于 highlight c语言源代码的 syntax 文件内容示例.
+%YAML 1.2
+---
+name: c
+file_extensions: [c, h]
+scope: source.c
+
+contexts:
+  main:
+    - match: \b(if|else|for|while)\b
+      scope: keyword.control.c
+
+上例 syntax 中只有一个 context:main ,在 main 的内容中:
+match 的 value 是用于搜索文本内容的 regex_pattern;sublime 内置了一个 regex engin .
+而 scope 的 value 则是分配给搜索到的文本的 scope ;
+color_schemes 则可以通过这些 scope 来 highlight 对应文本.
+每一个 syntax 的第一个 context 都必须是 main .
+ps:因为 YAML 语法限制,syntax 内容中不能有 tabs .
+
+
+
+
+
+《《header》》
+header 中可用的 keys 有:
+name: 可选.定义了 syntax 在菜单(status bar 中的 syntax_menu)中显示的名称;如未指定则从 syntax 文件名中派生.
+file_extensions: strings_list. 定义了 syntax 作用的文件类型的 file_extensions .
+first_line_match: 遇到无 file_extension 的文件,则用本 key 的 value: 一个 regex 来匹配该文件的第一行内容,以辨断是否该为该文件应用本 syntax .
+scope: 默认分配给所有内容的全局 scope .
+hidden: 在 syntax_menu 中隐藏本 syntax .
+
+
+
+
+
+《《contexts》》
+一般情况下,一个 syntax 中需要不止一个 contexts ,以便处理各种复杂的情况.
+比如在 c 语言中,我们不希望字符串中的 for 被当成 keyword ,就可以采用下例中的方法:
+%YAML 1.2
+---
+name: c
+file_extensions: [c, h]
+scope: source.c
+
+contexts(上下文):
+  main:
+    - match: \b(if|else|for|while)\b
+      scope: keyword.control.c
+    - match: '"'
+      push: string
+
+  string:
+    - meta_scope: string.quoted.double.c
+    - match: \\.
+      scope: constant.character.escape.c
+    - match: '"'
+      pop: true
+
+在上例中, main context 中新加了一个 match ,用于匹配双引号:'"' ;
+当匹配到 '"' 时,向 contexts_stack 中压入一个 string context ;
+此后便用 string context 而不是 main context 来分配 scope;
+直至 string context 再匹配到另一个 '"' 并把自己从 contexts_stack 中弹出.
+string context 的 meta_scope key 在 string context 在 contexts_stack 顶部期间,分配 string.quoted.double.c scope 给所有遇到的文本.
+在 windows 和 linux 系统下,你可以通过 ctrl+alt+shift+p 快捷键查看当前 caret 下的文本的 scopes ;在 osx 系统下,则是 control+shift+p 快捷键.
+
+when a context(上下文) has multiple patterns(搜索模板), the leftmost one will be found.
+when multiple patterns(搜索模板) match at the same position, the first defined pattern will be selected. 
+
+
+
+《《contexts_metaPatterns》》
+meta_scope: 为所属 context 在 contexts_stack 顶部期间遇到的所有文本分配 scope ,包括触发压入和弹出所属 context 的操作的文本;
+如上例中解发压入和弹出 string context 操作的两个 '"' .
+
+meta_content_scope: 同上,只是不包含触发文本.
+
+meta_include_prototype: 阻止当前 context 继续自动包含 prototype_context .
+meta_include_prototype. used to stop the current context(上下文) from automatically including the prototype(原型) context(上下文). 
+
+clear_scopes: 
+clear_scopes. this setting allows removing scope names from the current stack(堆栈). it can be an integer, or the value true to remove all scope names. it is applied before meta_scope and meta_content_scope. this is typically(一般地) only used when one syntax is embedding(嵌入) another. 
+
+meta patterns 必须列在所属 context 的最前面,在所有其它 match 或 include pattenrns 之前.
+
+
+
+《《contexts_matchPatterns》》
+match pattern 可包含以下 keys:
+match: 用于匹配文本的 regex ;
+YAML 的字符串一般不用加引号,但是当你的 regex 中包含 #, :, -, {, [ 或 > 时,最好还是加下引号.
+一般情况下,regxes 不会跨行匹配.
+
+scope: 要分配给 match key 匹配到的文本的 scope .
+
+captures(捕获): regex 中 () 中的 subregex 匹配到的,可用 \index 反向引用(backreference)的部分称为子匹配(submatch).ps:请参阅 python 文件夹的 regex 文档.
+captures(捕获) 的 value 是一个 mapping of numbers ,用于分配 scopes 给 match key 匹配到的内容的 submatches .
+请参考下面的例子.
+
+push: 要压入 contexts stack 的 contexts 的 name;可以是单个的 context name,也可以是 context_names_list,或者是内联的 匿名(anonymous) context ;
+contexts_list 是按从左到右的顺序被压入 stack 中的,所以其内容在 stack 中的位置是 list 从右到左对应 stack 从上到下.
+
+pop: 弹出当前 context ;唯一接受的值是 true .
+
+set: 同 push,不过事先会把当前 context 弹出.
+
+embed: 同 push,不过只接受单个 context name ;
+embed(嵌入). accepts the name of a single context(上下文) to push into. while similar(相似,类似) to push, it pops out of any number of nested(嵌套) contexts(上下文) as soon as the escape pattern is found. this makes it an ideal(理想的,完美的) tool for embedding(嵌入) one syntax within another. 
+
+escape: 如果指定了 embed key ,本 key 必须有,value 为一个用于退出 embeded context 的 regex .
+此 regex 中的 backreferences 引用的是 match key 的 submatches .
+
+embed_scope: 
+embed_scope. a scope assigned to all text matched after the match and before the escape. similar(相似,类似) in concept(概念) to meta_content_scope. 
+
+escape_captures(捕获): keys 为 submatches index, values 为 scope names 的 mapping,用于 escape pattern .
+用 index 0 来分配一个 scope 给整个 escape match .
+
+ps:一个 match pattern 中只能有 push, pop, set 和 embed 中的一个,不能多个同时出现.
+
+此例中,regex 有两个 captures(捕获), 而 captures(捕获) key 分配给它们每人一个不同的 scope .
+- match: "^\\s*(#)\\s*\\b(include)\\b"
+  captures(捕获)(捕获内容):
+    1: meta.preprocessor(预处理器).c++
+    2: keyword.control.include.c++
+
+
+
+《《contexts_includePatterns》》
+为了方便地重用一些常用的 patterns 内容而不是一遍遍地重写它们,你可以将一个 context 内容包含进另一个 context .
+下面是一个包含注释(comments)pattern 的例子:
+expr:
+  - include: comments
+  - match: \b[0-9]+\b
+    scope: constant.numeric.c
+  ...
+
+不同于 push ,include 只是将目标 context 插入到当前 context 中,而不是 overlay 当前 context ;
+并且由于是被包含(included)而不是被压入(pushed),被包含的 context 的所有 meta patterns 都会被忽略.
+
+
+《《contexts_includePatterns_prototypePatterns》》
+然而对于像 comment patterns 这样太过频繁被引用的 patterns ,每次都手动包含它们还是太麻烦了,此时就该 prototype patterns 出场了.
+当你创建一个名为 prototype 的 context ,所有其它 contexts 都会在自己的内容顶部自动包含它.
+只有 meta_include_prototype: false 的 context 例外.
+例如:
+prototype:
+  - include: comments
+
+string:
+  - meta_include_prototype: false
+  ...
+字符串中的注释符号应该被忽略,所以 string context 用 meta_include_prototype: false 阻止了自动包含注释 prototype .
+
+
+
+
+
+《《includingOtherFiles》》
+有些编程语言可以包含另一种语言,为应对这种情况,syntax 也必须能包含其它的 syntax .
+比如:HTML 可以包含 javascript ,为 HTML 分配 scope 的 syntax 也必须能包含为 javascript 分配 scope 的 syntax .
+下面就是一个这样的例子:
+scope: text.html
+
+contexts:
+  main:
+    - match: <script>
+      push: packages/javascript/javascript.sublime-syntax
+      with_prototype:
+        - match: (?=</script>)
+          pop: true
+    - match: "<"
+      scope: punctuation.definition.tag.begin
+    - match: ">"
+      scope: punctuation.definition.tag.end
+
+上例中的 with_prototype key 概念上同 protorype context 很相似;
+它的 value 是一个 patterns_list ,patterns_list 中的 patterns 会被插入到 javascript.sublime-syntax 文件中的每一个 context 中;
+with_prototype 不会因为 meta_include_prototype: false 而停止插入.
+ 
+另一个常见的情况是包含 HTML 的模板语言(templating language),比如 jinja 语言.
+下面就是一个为包含 HTML 的 jinja 语言分配 scope 的 syntax 的例子:
+scope: text.jinja
+contexts:
+  main:
+    - match: ""
+      push: "packages/HTML/HTML.sublime-syntax"
+      with_prototype:
+        - match: "{{"
+          push: expr
+
+  expr:
+    - match: "}}"
+      pop: true
+    - match: \b(if|else)\b
+      scope: keyword.control
+
+比较特别的是,templating languages 通常表现得与 HTML 没什么不同,只有在有些标签(上例中为:{{}})中才会表现出底层特性;
+看起来仿佛不是 templating languages 包含了 HTML 而是 HTML 包含了 templating languages .
+上例中,在 main pattern 一开始就压入了 HTML.sublime-syntax,然后在 HTML.sublime-syntax 中的每一个 context 中插入一条 遇到 "{{" 就压入 expr context 的 rule ;
+而 expr context 中才是适用于本例中的 templating language:jinja 的 rules .
+in the example above, we can see it operates in HTML mode by default: the main context includes a single pattern that always matches, consuming no text, just including the HTML syntax. 
+
+
+
+
+
+《《variables》》
+在 regexes 中还可以使用变量:
+variables:
+  ident: '[A-Za-z_][A-Za-z_0-9]*'
+contexts:
+  main:
+    - match: '\b{{ident}}\b'
+      scope: keyword.control
+
+variables 必须在 .sublime-syntax 文件的顶级定义, 通过 {{var_name}} 的格式引用,变量内容中也可以包含其它变量;
+合法变量名必须匹配 [A-Za-z_0-9]+ regex,而合法的变量名引用必须匹配 {{[A-Za-z_0-9]+}} regex;
+不合法的变量名引用,如单独的 {{ 或 }} 都会被当成普通字符.
+
+
+
+
+
+《《selectedExamples》》
+《《selectedExamples_bracketBalancing》》
+下例 highlights 没有对应 ( 的 ) :
+name: c
+scope: source.c
+
+contexts:
+  main:
+    - match: \(
+      push: brackets
+    - match: \)
+      scope: invalid.illegal.stray-bracket-end
+
+  brackets:
+    - match: \)
+      pop: true
+    - include: main
+
+
+
+《《selectedExamples_sequentialContexts》》
+下例 highlights C 风格声明中多余的分号:
+this example will highlight a c style for statement containing too many semicolons(分号): 
+for_stmt:
+  - match: \(
+    set: for_stmt_expr1
+for_stmt_expr1:
+  - match: ";"
+    set: for_stmt_expr2
+  - match: \)
+    pop: true
+  - include: expr
+for_stmt_expr2:
+  - match: ";"
+    set: for_stmt_expr3
+  - match: \)
+    pop: true
+  - include: expr
+for_stmt_expr3:
+  - match: \)
+    pop: true
+  - match: ";"
+    scope: invalid.illegal.stray-semi-colon
+  - include: expr
+
+
+
+《《selectedExamples_advancedStackUsage》》
+在C语言中 entity.name.type scope 应该被分配给 tepdef keyword ,这是个很难完成的工作,因为 tepdef 的定义可能会很复杂:
+typedef struct
+{
+    int x;
+    int y;
+} point_t;
+
+
+to recognise these, after matching the typedef keyword, two contexts will be pushed onto the stack: the first will recognise a typename, and then pop off, while the second will recognise the introduced name for the type: 
+main:
+  - match: \btypedef\b
+    scope: keyword.control.c
+    set: [typedef_after_typename, typename]
+
+typename:
+  - match: \bstruct\b
+    set:
+      - match: "{"
+        set:
+          - match: "}"
+            pop: true
+  - match: \b[A-Za-z_][A-Za-z_0-9]*\b
+    pop: true
+
+typedef_after_typename:
+  - match: \b[A-Za-z_][A-Za-z_0-9]*\b
+    scope: entity.name.type
+    pop: true
+
+上例中的 typename context 用两个嵌套的 inline contexts 匹配了一个完整的 struct{} 结构却没有对其进行任何 highlight ,因为此处的 struct{} 是 tepdef 语句的一部分.
+
+
+
+《《selectedExamples_phpHeredocs》》
+下面是一个为 php 分配 scope 的例子,其中 heredoc context 用了一个 backreference \1 来引用 main context 中的 match pattern 的第一个(实际上也是唯一一个) submatch .
+name: php
+scope: source.php
+
+contexts:
+  main:
+    - match: <<<([A-Za-z][A-Za-z0-9_]*)
+      push: heredoc
+
+  heredoc:
+    - meta_scope: string.unquoted.heredoc
+    - match: ^\1;
+        pop: true
+
+
+
+
+
+《《testing》》
+在创建一个新 syntax 时,除了用 show_scope_name 命令一个个手动地查看 scopes ,你还可以创建一个 syntaxTextFile 来自动检测:
+// syntax test "packages/c/c.sublime-syntax"
+#pragma once
+// <- source.c meta.preprocessor.c++
+ // <- keyword.control.import
+
+// foo
+// ^ source.c comment.line
+// <- punctuation.definition.comment
+
+/* foo */
+// ^ source.c comment.block
+// <- punctuation.definition.comment.begin
+//     ^ punctuation.definition.comment.end
+
+#include "stdio.h"
+// <- meta.preprocessor.include.c++
+//       ^ meta string punctuation.definition.string.begin
+//               ^ meta string punctuation.definition.string.end
+int square(int x)
+// <- storage.type
+//  ^ meta.function entity.name.function
+//         ^ storage.type
+{
+    return x * x;
+//  ^^^^^^ keyword.control
+}
+
+"hello, world! // not a comment";
+// ^ string.quoted.double
+//                  ^ string.quoted.double - comment
+
+
+to make one, follow these rules 
+ensure the file name starts with syntax_test_ .
+ensure the file is saved somewhere within the packages directory: next to the corresponding .sublime-syntax file is a good choice. 
+ensure the first line of the file starts with: <comment_token> syntax test "<syntax_file>". note that the syntax file can either be a .sublime-syntax or .tmlanguage file. 
+once the above conditions are met, running the build command with a syntax test or syntax definition file selected will run all the syntax tests, and show the results in an output panel. next result (f4) can be used to navigate to the first failing test. 
+each test in the syntax test file must first start the comment token (established on the first line, it doesn't actually have to be a comment according to the syntax), and then either a ^ or <- token. 
+the two types of tests are: 
+caret: ^ this will test the following selector against the scope on the most recent non-test line. it will test it at the same column the ^ is in. consecutive ^s will test each column against the selector. 
+arrow: <- this will test the following selector against the scope on the most recent non-test line. it will test it at the same column as the comment character is in. 

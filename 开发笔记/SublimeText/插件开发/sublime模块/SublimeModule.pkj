@@ -1,0 +1,722 @@
+《《find_resources(file_name)》》
+参数:file_name:str 类型;资源文件的基础文件名.
+
+返回:
+relative_paths_list:list 类型;[relative_path1,relative_path2...]格式的字符串列表.
+包含所有搜索到的资源文件相对于packages文件夹的路径.
+
+描述:在packages文件夹下搜索资源文件file_name,并返回搜索到的所有资源文件相对于packages文件夹的路径.
+
+ps:
+sublime有两个packages文件夹,一个是系统packages文件夹,另一个是用户packages文件夹.
+通过菜单:preferences->browse packages...打开的就是用户packages文件夹.
+系统默认的资源文件都以包的形式保存在系统packages文件夹下,由sublime自动维护,用户不能修改.
+用户自定义的资源文件要保存在用户packages文件夹下,而且不能超过三层目录,否则sublime会搜索不到.
+如:"packages/myresources/main.sublim-menu"可以搜索得到;"packages/myresources/menus/main.sublime-menu"就搜索不到.
+资源文件包括:扩展名为".sublime-menu"的菜单文件;扩展名为".sublime-keymap"的快捷键文件以及扩展名为".sublime-settings"的配置文件等.
+详情参见《资源文件》文档.
+
+import sublime
+import sublime_plugin
+
+
+class MyexampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		vr=sublime.find_resources("main.sublime-menu")
+		print("\n\nfind_resources(main.sublime-menu):",vr)
+
+
+《《load_resource(relative_path)》》
+参数:relative_path:str 类型;资源文件相对于packages文件夹的路径.
+
+返回:content:str 类型;包含资源文件内容的字符串.
+无效字符会转化为尖括号内的字符编码;
+如:在"utf-8"编码中,回车符"\r"会被转化为"<0x0d>"
+sublime资源文件使用类unix系统的换行符模式"\n";windows系统换行符"\r\n"中的"\r"会被认为是无效字符.
+
+描述:加载资源文件,返回包含资源文件内容的字符串.
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		vr=sublime.load_resource("packages/aoi/main.sublime-menu")
+		print("\n\nload_resource(packages/aoi/main.sublime-menu):",vr)
+
+
+《《load_binary_resource(relative_path)》》
+参数:relative_path:str 类型;资源文件相对于packages文件夹的路径.
+
+返回:content:bytes 类型;包含资源文件内容的字节包.
+请参考python文档中的《数据类型》中的《bytes》小节.
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		vr=sublime.load_binary_resource("packages/aoi/main.sublime-menu")
+		print("\n\nload_binary_resource(packages/aoi/main.sublime-menu)",vr)
+
+
+
+
+
+
+《《encode_value(json_value,<pretty>)》》
+参数:
+json_value:json兼容数据.
+
+pretty:bool 类型;决定是否保留格式符的flag.
+true:转化后的字符串保留格式符;
+false:转化后的字符串不保留格式符.
+缺省为false.
+
+返回:json_string:str 类型;json兼容字符串.
+
+描述:把json兼容数据转化为json兼容字符串.
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		json_value=["a",2,"b",3,4,5]
+
+		print("\n\n默认:")
+		json_string=sublime.encode_value(json_value)
+		print("json_string:",json_string)
+		print("json_string[0:4]:",json_string[0:4])
+
+		print("\npretty为true:")
+		json_string=sublime.encode_value(json_value,true)
+		print("json_string:",json_string)
+		print("json_string[0:4]:",json_string[0:4])
+
+
+《《decode_value(json_string)》》
+参数:json_string:str 类型;json兼容字符串.
+
+返回:json_value:json兼容数据.
+
+描述:把json兼容字符串转化为json兼容数据.
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		json_string='["a",1,"b",3,4,5]'
+
+		json_value=sublime.decode_value(json_string)
+		print("\n\njson_value:",json_value)
+		print("json_value[0:5]:",json_value[0:5])
+
+
+
+
+
+
+《《expand_variables(need_expand_string,vars_dict)》》
+参数:
+need_expand_string:str 类型;需要变量扩展的字符串;其中的变量名采用snippet语法格式,如:${var_name}
+vars_dict:dict 类型;{var_name1:var_value1, var_name2:var_value2,...}格式的字典;
+
+返回:expanded_string:str 类型;变量扩展后的字符串.
+
+描述:用vars_dict内容对need_expand_string进行变量扩展,返回扩展后的字符串expanded_string.
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		expanded_string=sublime.expand_variables("my dear enlightening teacher ${name}, is ${age} years old now.",{"name" : "aoi sola", "age" : "37"})
+
+		print("\n\n",expanded_string)
+
+
+原型2:expand_variables(string_list,variable_dictionary)
+
+参数:need_expand_string_list:list 类型;包含多个需要变量扩展的字符串的列表,可嵌套,但最多两层.
+
+返回:expanded_string_list:list 类型;内容经过变量扩展的need_expand_list.
+
+描述:用variable_dictionary内容对need_expand_string_list内字符串进行变量扩展,返回内容字符串已被扩展了的expanded_string_list.
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		need_expand_string_list=\
+		[
+			"姓名:${name}",
+			[
+				"普通爱好1:${hobby1}",
+				[
+					"球类爱好1:{ball1}",
+					"球类爱好2:{ball2}"
+				],
+				"普通爱好2:${hobby2}"
+			],
+			"年龄:${age}"
+		]
+
+		expanded_string_list=sublime.expand_variables(need_expand_string_list,
+	{
+			"name":"龙傲天",
+			"hobby1":"音乐",
+			"hobby2":"电影",
+			"ball1":"篮球",
+			"ball2":"足球",
+			"hobby2":"电影",
+			"age":"23"
+		})
+
+		print("\n\n",expanded_string_list)
+
+
+原型3:expand_variables(need_expand_string_dictionary,variable_dictionary)
+
+参数:need_expand_string_dictionary:dict 类型;包含多个需要变量扩展的字符串的字典,可嵌套,但最多两层.
+
+返回:expanded_string_dictionary:dict 类型;内容经过变量扩展的need_expand_dictionary.
+
+描述:用variable_dictionary内容对need_expand_string_dictionary内字符串进行变量扩展,返回内容字符串已被扩展了的expanded_string_dictionary.
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		need_expand_string_dictionary=\
+		{
+			"my_name":"姓名:${name}",
+			"hobbys":{
+									"normal_hobby1":"普通爱好1:${hobby1}",
+									"ball_hobbys":{
+																	"ball_hobby1":"球类爱好1:{ball1}",
+																	"ball_hobby2":"球类爱好2:{ball2}"
+																},
+									"normal_hobby2":"普通爱好2:${hobby2}",
+								},
+			"my_age":"年龄:${age}"
+		}
+
+		expanded_string_dictionary=sublime.expand_variables(need_expand_string_dictionary,
+	{
+			"name":"龙傲天",
+			"hobby1":"音乐",
+			"hobby2":"电影",
+			"ball1":"篮球",
+			"ball2":"足球",
+			"hobby2":"电影",
+			"age":"23"
+		})
+
+		print("\n\n",expanded_string_dictionary)
+
+
+need_expand_string_list和 need_expand_string_dictionary还可以相互嵌套
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		need_expand_string_dictionary=\
+		{
+			"my_name":"姓名:${name}",
+			"hobbys":[
+									"普通爱好1:${hobby1}",
+									{
+										"ball_hobby1":"球类爱好1:{ball1}",
+										"ball_hobby2":"球类爱好2:{ball2}"
+									},
+									"普通爱好2:${hobby2}",
+								],
+			"my_age":"年龄:${age}"
+		}
+
+		expanded_string_dictionary=sublime.expand_variables(need_expand_string_dictionary,
+	{
+			"name":"龙傲天",
+			"hobby1":"音乐",
+			"hobby2":"电影",
+			"ball1":"篮球",
+			"ball2":"足球",
+			"hobby2":"电影",
+			"age":"23"
+		})
+
+		print("\n\n",expanded_string_dictionary)
+
+
+import sublime
+import sublime_plugin
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		need_expand_string_list=\
+		[
+			"姓名:${name}",
+			{
+				"normal_hobby1":"普通爱好1:${hobby1}",
+				"ball_hobbys":[
+												"球类爱好1:{ball1}",
+												"球类爱好2:{ball2}"
+											],
+				"normal_hobby2":"普通爱好2:${hobby2}"
+			},
+			"年龄:${age}"
+		]
+
+		expanded_string_list=sublime.expand_variables(need_expand_string_list,
+	{
+			"name":"龙傲天",
+			"hobby1":"音乐",
+			"hobby2":"电影",
+			"ball1":"篮球",
+			"ball2":"足球",
+			"hobby2":"电影",
+			"age":"23"
+		})
+
+		print("\n\n",expanded_string_list)
+
+
+
+
+
+
+
+
+
+
+
+《《set_timeout(callback,delay)》》
+参数:
+callback:回调函数;函数名后不用加"()"
+delay:int 类型数字,延时毫秒数.
+
+描述:在主线程上,延时delay毫秒后调用callback函数.
+相同延时的多个回调函数会按它们被添加的顺序被调用.
+
+import sublime
+import sublime_plugin
+
+# 定义回调函数
+def calbak():
+	print("\n\nset_timeout(calbak,5000)")
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+
+		# 设置延时任务:5000毫秒后调用回调函数"calbak".
+		# 注意!此处作为参数的回调函数名"calbak"后面不加"()".
+		sublime.set_timeout(calbak,5000)
+
+
+《《set_timeout_async(callback,delay)》》
+参数:
+callback:回调函数;函数名后不用加"()"
+delay:延时毫秒数.
+
+描述:在新线程上延时delay毫秒后调用callback函数.
+
+import sublime
+import sublime_plugin
+
+def calbak():
+	print("\n\nset_timeout_async(calbak,5000)")
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+
+		sublime.set_timeout_async(calbak,5000)
+
+
+
+
+
+
+《《status_message(string)》》
+参数:string:str 类型;要显示的内容.
+
+返回:无.
+
+描述:在状态栏显示string内容.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		sublime.status_message("老狗受死！！！")
+
+
+《《message_dialog(string)》》
+参数:string:str 类型;要显示的内容.
+
+返回值:无.
+
+描述:在普通弹窗显示string内容.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		sublime.message_dialog("hellow")
+
+
+《《error_message(string)》》
+参数:string:str 类型;要显示的内容.
+
+返回:无.
+
+描述:在错误弹窗显示string内容.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		sublime.error_message("老狗受死！！！")
+
+
+《《ok_cancel_dialog(string,<ok_button>)》》
+参数:
+string:str 类型;要显示的内容.
+ok_button:str 类型;可选;自定义确定(ok)按钮上的文字.
+
+返回:
+bool 类型:
+点确定(ok)true;
+点取消(cancel)false.
+
+描述:在确认、取消弹窗显示string内容.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		sublime.ok_cancel_dialog("老狗受死！！！", "确定按钮自定义文字")
+
+
+《《yes_no_cancel_dialog(string,<yes_title>,<no_title>)》》
+参数:
+string:str 类型;要显示的内容.
+yes_title:str 类型;可选;自定义是(yes)按钮上的文字.
+no_title:str 类型;可选;自定义否(no)按钮上的文字.
+
+返回:
+sublime模块(module)里预定义的三个 int 类型属性的值:
+点是(yes)为 sublime.DIALOG_YES=1;
+点否(no)为 sublime.DIALOG_NO=2;
+点取消(cancel)为 sublime.DIALOG_CANCEL=0.
+
+描述:在是、否、取消弹窗中显示string内容.
+
+
+
+
+
+
+《《windows()》》
+参数：无
+
+返回:windows_list:包含多个窗口对象的列表.
+
+描述:返回所有打开窗口对象的列表.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+
+		vr=sublime.windows()
+		print("\n\nwindows():",vr)
+
+
+《《active_window()》》
+参数：无
+
+返回:window:窗口对象.
+
+描述:返回当前活动窗口对象.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+
+		vr=sublime.active_window()
+		print("\n\nactive_window():",vr)
+
+
+
+
+
+
+《《packages_path()》》
+参数：无
+
+返回:string:str 类型;目录字符串.
+
+描述:返回packages文件夹目录.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		vr=sublime.packages_path()
+		print("\n\npackages_path():",vr)
+
+
+《《installed_packages_path()》》
+参数：无
+
+返回:string:str 类型;目录字符串.
+
+描述:返回installedpackages文件夹目录.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		vr=sublime.installed_packages_path()
+		print("\n\ninstalled_packages_path():",vr)
+
+
+《《cache_path()》》
+参数:无
+
+返回:string:str 类型字符串.
+
+描述:返回caches文件夹目录.
+
+import sublime
+import sublime_plugin
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		  vr=sublime.cache_path()
+		  print("\n\ncache_path():",vr)
+
+
+
+
+
+
+《《load_settings(file_name)》》
+参数:file_name:str 类型;"*.sublime-settings"格式;配置包文件基础名(不含目录),会自动搜索匹配的配置包文件.
+
+返回:settings对象.
+
+描述:搜索并加载file_name配置包文件内容,生成并返回settings对象;
+只加载有效配置内容,注释等无效内容不会加载.
+如果在用相同 file_name 调用 sublime.save_settings(file_name)保存之前加载的 settings 对象之前,再次用相同 file_name 调用 sublime.load_settings(file_name);只会返回之前加载的 settings 对象,不会重新从硬盘上的file_name文件中加载内容.
+
+#!/usr/bin/python-
+# -*- coding: utf-8 -*-
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+
+		vr=sublime.load_settings("mysettings.sublime-settings")
+		print("\n\nload_settings(mysettings.sublime-settings):",vr)
+
+
+《《save_settings(file_name)》》
+参数:file_name:str 类型;"*.sublime-settings"格式;配置包文件基础名(不含目录). # 会保存到packages\user\目录下
+
+描述:
+将之前用相同 file_name 调用loda_settings(file_name);返回的settings对象中的配置改动,保存到#packages\user\目录下的,file_name配置文件包.
+其它内容(注释和未改动的配置内容)不会改变.
+如果之前没有用相同 file_name 调用loda_settings(file_name)加载过settings对象;
+即对应的settings对象不存在,则不会保存任何内容.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+
+		sublime.save_settings("mysettings.sublime-settings")
+
+
+
+
+
+
+《《set_clipboard(string)》》
+参数:string:str 类型字符串.
+
+描述:把string内容设为剪贴板内容.
+
+《《get_clipboard()》》
+参数：无
+
+返回:string:str 类型字符串.
+
+描述:返回剪贴板内容.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		print("\n\n默认情况下:")
+		vr=sublime.get_clipboard()
+		print("get_clipboard():",vr)
+
+		print("\nset_clipboard(老狗受死！！！):")
+		sublime.set_clipboard("老狗受死！！！")
+		vr=sublime.get_clipboard()
+		print("get_clipboard():",vr)
+
+
+
+
+
+
+《《score_selector(scope,selector)》》
+参数:
+scope:
+selector:
+
+返回:int:未知.
+
+描述:未知.把选择器设置成对应的区域,返回区域值.0表示没有选区,大于0表示有一个选区.不同的选择器可以通过scope来比较:scope值越高说明这段选区越适合这个选择器.
+
+
+
+
+
+
+
+《《run_command(string,<args>)》》
+参数:
+string:str 类型;命令名.
+args:str 类型;可选;传给命令的参数.
+
+描述:运行内建的applicationcommand命令.
+
+
+
+
+
+
+
+《《log_commands(flag)》》
+参数:flag:bool 值.
+
+返回:无.
+
+描述:flag为true时,所有命令的运行都会记录到控制台;
+flag为false时,则不会记录.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+
+		sublime.log_commands(true)
+
+
+《《log_input(flag)》》
+参数:flag:bool 值.
+
+返回:无.
+
+描述:flag为true时,所有按键都会记录到控制台;
+flag为false时,则不会.
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+
+		sublime.log_input(true)
+
+
+
+
+
+
+《《log_result_regex(flag)???》》
+参数:
+flag:bool
+为 True 时,所有正则表达式搜索结果都会被记录到控制台
+为 False 时则不记录
+
+返回值:None
+
+描述:设置正则表达式的搜索结果是否被记录到控制台
+Controls result regex logging. This is useful for debugging regular expressions used in build systems. 
+
+
+
+
+
+《《version()》》
+参数：无
+
+返回:string:str 类型字符串.
+
+描述:返回sublime版本号.
+
+《《platform()》》
+参数：无
+
+返回:string:str 类型字符串.
+
+描述:返回运行平台:"osx","linux"或"windows"
+
+《《arch()》》
+参数：无
+
+返回:string:str 类型字符串.
+
+描述:返回cpu架构:"x64","x32".
+
+import sublime
+import sublime_plugin
+
+
+class MyExampleCommand(sublime_plugin.TextCommand):
+	def run(self,edit):
+		vr=sublime.version()
+		print("\n\nversion():",vr)
+
+		vr=sublime.platform()
+		print("\nplatform():",vr)
+
+		vr=sublime.arch()
+		print("\narch():",vr)
+

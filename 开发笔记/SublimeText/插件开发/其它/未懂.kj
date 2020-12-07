@@ -1,0 +1,202 @@
+《《代码片段》》
+
+除了 Tools 下的 New Plugin 外，还有一个 New Snippet， 它的作用是保存一些经常使用的代码块，然后在编辑器中只要输入触发条件的字符+TAB键，便可自动补全代码块。
+示例(js 代码的注释部分)：
+<snippet>
+    <content><![CDATA[
+/**
+ *${1:function Instructions}
+ *@parames   ${2:parame name}    [description]
+ *@return    ${3:return value}   [description]
+ *@author    ${4:Name}   <${5:123456789}@qq.com>
+ */
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>/**</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <scope>source.js</scope>
+
+    <description>/**</description>
+</snippet>
+
+#结构说明：
+
+<snippet>
+    <content><![CDATA[ 你需要插入的代码片段${1:name} ]]></content>
+
+    可选：快捷键，利用Tab自动补全代码的功能
+    <tabTrigger>/**</tabTrigger>
+
+    可选：使用范围，不填写代表对所有文件有效。附：source.css和test.html分别对应不同文件。
+    <scope>source.js</scope>
+
+    可选：在snippet菜单中的显示说明（支持中文）。如果不定义，菜单则显示当前文件的文件名。
+    <description>My Fancy Snippet</description>
+</snippet>
+
+${1:name}表示代码插入后，光标所停留的位置，可同时插入多个。其中:name为自定义参数（可选）。
+${2}表示代码插入后，按Tab键，光标会根据顺序跳转到相应位置（以此类推）。
+
+创建文件 filename.sublime-snippet 保存以上代码，放入myplugin 文件夹； 在 .js 文件中输入 /** 之后按 TAB键，便可自动生成一段注释！
+
+自动提示：
+Sublime支持很多种语言的自动提示功能，这里面我们来介绍一下如何对javascript代码进行自动语法提示！
+1.创建一个 js.sublime-completions 文件，输入一下内容：
+{
+    // 这里需要根据不同语言进行修改后缀，这里是 .js,如果是其他语言只要把js改成例如 lua、php等
+    "scope": "source.js - keyword.control.js - constant.language.js - string",
+
+    "completions":
+    [
+        # 一些会出现自动提示的单词
+        "if", "else", "return", "false", "true", "break",
+        #输入fn 时会出现 fn-function的自动提示选项
+        { "trigger": "fn-function", "contents": "function ${1:fuction_name}() {\n   //${2:to-do}\n}" }
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+将 js.sublime-completions 文件保存至 myplugin 目录， 在 .js 文件中输入 fn 时会出现 fn-function的自动提示选项，点击选项会自动生成一个空函数（按Tab键光标会依次跳转并选中 function_name 和 to-do）：
+ function function_name() {
+    //to-do
+}
+
+
+
+
+Sublime Text 2 的插件开发差不多就是这样。简单的功能我们可以自己动手实现，如果需要开发一些比较复杂功能的插件就需要多熟悉 sublime 插件的 API了，在Packages目录下的Defualt文件夹也有很多插件的例子，值得参考，例如：
+Packages/Default/duplicate_line.py：复制一行或者单词
+Packages/Default/goto_line.py：提示输入，定位到行
+Packages/Default/font.py：读取设置，调整字体
+Packages/Default/mark.py：侧边栏添加图标
+Packages/Default/trim_trailing_whitespace.py：保存前，去掉尾部空格
+
+view.rowcol(point) # 把point转化为rowcol
+view.text_point(row,col) # 把row和col转化为point
+view.line(point) #返回参数point所在行的Region;行首point为a属性,行尾point为b属性.
+view.settings().get('syntax') #返回当前View的编程语言.
+set_timeout_async
+self.view.run_command("expand_selection", {"to": "brackets"})
+
+内置命令
+expand_selection
+用内置的expand_selection命令，to参数设置为brackets 每个css规则区域内容就可以选中了
+self.view.run_command("expand_selection", {"to": "brackets"})
+python中执行shell命令的四种方式
+os.system()
+这个方法得不到shell命令的输出
+
+import os
+
+os.system('ls')
+
+# 执行ls命令
+popen()
+这个方法能得到命令执行后的结果是一个字符串，要自行处理才能得到想要的信息
+
+import os
+
+str = os.popen("ls").read()
+
+a = str.split('\n')
+
+for b in a:
+
+    print b
+commands模块
+可以很方便的取得命令的输出（包括标准和错误输出）和执行状态位
+commands.getstatusoutput(cmd) 返回(status,output)
+
+import commands
+
+a,b = commands.getstatusoutput('ls')
+
+print a
+
+# a是退出的状态
+
+# 0
+
+print b
+
+# b是输出结果
+
+# 执行ls命令
+commands.getoutput(cmd) 只返回输出结果
+
+import commands
+
+b = commands.getoutput('ls')
+
+# 执行ls命令
+commands.getstatus(file) 待补充
+subprocess模块
+使用subprocess模块可以创建新的进程，可以与新建进程的输入/输出/错误管道连通，并可以获得新建进程执行的返回状态。使用subprocess模块的目的是替代os.system(),os.popen(),commands*等旧的函数和模块。
+subprocess.call(command,shell=True)
+
+import subprocess
+
+subprocess.call('ls',shell=True)
+
+# 执行ls命令
+subprocess.Popen(command,shell=True)
+
+import subprocess
+
+subprocess.Popen('ls',shell=True)
+
+# 执行ls命令
+subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)待补充
+如果command不是一个可执行文件，shell=True是不可省略的。
+shell=True表示在shell下执行command
+常用语句功能
+view.settings().get('syntax')
+返回当前文件格式，常见的有
+[tpl,inc,html] : Packages/HTML/HTML.sublime-syntax
+css: Packages/CSS/CSS.sublime-syntax
+php: Packages/PHP/PHP.sublime-syntax
+js:Packages/JavaScript/JavaScript.sublime-syntax
+py:Packages/Python/Python.sublime-syntax
+
+
+if int(sublime.version()) > 3000
+
+    print("sublime3")
+判断sublime的版本信息
+命令的拼写
+['node', '/Users/guopeipei/Library/Application Support/Sublime Text 3/Packages/JSLint/linter.js', '--bitwise', '--browser', '--es6', '--eval', '--for', '--fudge', '--node', '--this', '/Users/guopeipei/project/M_so_com/m_so/resource/js/result/scrollTab.js']
+Running node /Users/guopeipei/Library/Application Support/Sublime Text 3/Packages/JSLint/linter.js --bitwise --browser --es6 --eval --for --fudge --node --this /Users/guopeipei/project/M_so_com/m_so/resource/js/result/scrollTab.js
+
+
+sublime.View类重要方法
+sublime.View.find_by_class(point, forward, classes, <separators>)
+通过Class查找,sublime提供的Class
+sublime.CLASS_WORD_START
+sublime.CLASS_WORD_END
+sublime.CLASS_PUNCTUATION_START
+sublime.CLASS_PUNCTUATION_END
+sublime.CLASS_SUB_WORD_START
+sublime.CLASS_SUB_WORD_END
+sublime.CLASS_LINE_START
+sublime.CLASS_LINE_END
+sublime.CLASS_EMPTY_LINE
+sublime.View.find_by_selector(selector)
+根据语法选择器查找 ，selector是一个字符串。Scope Naming
+sublime.py文件位置
+/Applications/Sublime Text.app/Contents/MacOS/sublime.py
+
+class ExampleCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        for region in reversed(self.view.find_all("<")): if not region.empty(): self.view.replace(edit, region, "<") for region in reversed(self.view.find_all(">")):
+            if not region.empty():
+                self.view.replace(edit, region, ">")

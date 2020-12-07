@@ -1,0 +1,62 @@
+《《文件内跳转》》
+sublime.view.find_all:搜索标题 regions,得到title_regions_list
+
+
+for title_region in title_regions_list语句遍历title_regions_list
+
+
+title=sublime.view.substr(title_region):将标题 regions 转为标题字符串
+
+
+事先定义空列表:titles_list=[],否则多次操作的 titles 会叠加到一起
+
+
+titles_list.append(title)将所有转化来的 title 追加到 titles_list 列表
+
+
+self.view.window()得到当前 view 所属 window;sublime.window.show_quick_panel(titles_list,on_done):在快捷面板中显示 titles_list
+
+
+回调函数 on_done(index),index为被选中标题的 index ;如 quick panel canceled 则为 -1
+
+
+sublime.view.show(title_regions_list[index]):跳转到选中标题
+
+
+插件的生命周期从其被调用开始到 sublime 被关闭前都不会结束，期间全局变量会一直存在。
+
+
+
+
+
+《《root_path下搜索打开文件》》
+view.settings()返回当前settings对象
+
+
+
+settings.get('kuaiji_root')返回文档包根目录
+
+
+
+Python os模块的 os.listdir(文档包根目录)方法返回子文件/夹目录字符串列表
+
+
+和《文件内跳转》一样在快捷面板显示列表
+
+
+Python os.path.isfile(path)/isdir(path)判断选中项是目录还是文件
+
+
+是文件，window.open_file()方法打开选中文件
+
+
+是目录，则重复上面操作
+
+
+
+《《当前打开文件夹下搜索打开文件》》
+open_folders=window.folders()返回当前打开的文件夹目录
+
+Python os.listdir(open_folder[0])返回当前打开的文件夹下所有文件和文件夹
+
+然后像《root_path下搜索打开文件》一样操作就行了

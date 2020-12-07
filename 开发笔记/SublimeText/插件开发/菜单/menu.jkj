@@ -1,0 +1,133 @@
+Menus in Sublime Text are defined by files ending in .sublime-menu. Menus use JSON, with the top-level structure(结构) being an array(数组). Each binding is a JSON object(对象) containing informat(格式)ion(信息) to define the text of the menu entry(入口)(入口) and what action it should perform(执行).
+Example(示例)
+Entries(入口)
+Available(可用的) Menus
+Adding(添加) to Submenus(子菜单)
+Customization(定制)
+--------------------------------------------------------
+
+--------------------------------------------------------
+Example(示例)
+The following is an example(示例) of the format(格式) of a .sublime-menu file.
+[
+    {
+        "caption": "File",
+        "mnemonic(助记符)": "F",
+        "id": "file",
+        "children":
+        [
+            { "command": "new_file", "caption": "New File", "mnemonic(助记符)": "N" },
+
+            { "command": "prompt_open_file", "caption": "Open File…", "mnemonic(助记符)": "O", "platform(平台)": "!OSX" },
+            { "command": "prompt_open_folder", "caption": "Open Folder…", "platform(平台)": "!OSX" },
+            { "command": "prompt_open", "caption": "Open…", "platform(平台)": "OSX" }
+        ]
+    }
+]
+--------------------------------------------------------
+
+--------------------------------------------------------
+Entries(入口)
+Each menu entry(入口) is a JSON object(对象) with one or more keys. The list of supported(支持) keys includes:
+--------------------------------------------------------
+"caption"
+The text of the menu entry(入口)
+--------------------------------------------------------
+"mnemonic(助记符)"
+The character to use as the key to press to activate(激活) the entry(入口). Only applies(使用,应用) to Windows and Linux. Must match(匹配) the case(大小写) of the character in the "caption".
+--------------------------------------------------------
+"command"
+A string of the command to execute(执行) when the entry(入口) is activated(激活)
+--------------------------------------------------------
+"args"
+A JSON object(对象) of args to send to the command
+--------------------------------------------------------
+"children"
+A JSON array(数组) of entries(入口) to create a submenu(子菜单) from
+--------------------------------------------------------
+"id"
+A unique(唯一的) string for the menu entry(入口). Used for menu entries(入口) with "children" to allow adding(添加) additional(附加的) child entries(入口).
+--------------------------------------------------------
+"platform(平台)"
+One of the strings: "OSX", "!OSX", "Windows", "!Windows", "Linux" or "!Linux". Controls what platforms(平台) the entry(入口) is shown on.
+Each menu entry(入口) requires(需要) at minimum(最少的), the key "caption" for a non-functionality(实用的) entry(入口), or "command" for an entry(入口) that performs(执行) an action.
+--------------------------------------------------------
+
+--------------------------------------------------------
+Available(可用的) Menus
+Sublime Text has seven menus that may be customize(定制)d(定制):
+--------------------------------------------------------
+Main.sublime-menu
+Primary(主要的) menu for the application(程序)
+--------------------------------------------------------
+Side Bar Mount(挂载) Point.sublime-menu
+Context(上下文) menu for top-level folders in the side bar
+--------------------------------------------------------
+Side Bar.sublime-menu
+Context(上下文) menu for files and folders in the side bar. Has "magic" args for passing file and folder names to commands.
+--------------------------------------------------------
+Entries(入口) with an arg "files": [] will be enabled for files and will pass file names to the command via(通过) the arg files.
+--------------------------------------------------------
+Entries(入口) with an arg "dirs": [] will be enabled for folders and will pass file names to the command via(通过) the arg dirs.
+--------------------------------------------------------
+Entries(入口) with an arg "paths": [] will be enabled for files and folders and will pass file and folder names to the command via(通过) the arg paths.
+--------------------------------------------------------
+Tab Context(上下文).sublime-menu
+Context(上下文) menu for file tabs
+--------------------------------------------------------
+Context(上下文).sublime-menu
+Context(上下文) menu for text areas
+--------------------------------------------------------
+Find in Files.sublime-menu
+Menu shown when clicking the ... button in Find in Files panel
+--------------------------------------------------------
+Widget(小玩意儿) Context(上下文).sublime-menu
+Context(上下文) menu for text inputs in various(各种各样的) panels(面板). Technically(严格来说) this file name can be changed via(通过) the "context(上下文)_menu" setting inside of Widget(小玩意儿).sublime-settings.
+--------------------------------------------------------
+
+--------------------------------------------------------
+Adding(添加) to Submenus(子菜单)
+Using the "id" key of an entry(入口), it is possible to add entries(入口) to submenus(子菜单). When adding(添加) submenu(子菜单) entries(入口), specify(指定) only the "id" and "children" keys of the parent entry(入口), and set the value of "children" to an array(数组) of entries(入口) to append(附加) to the submenu(子菜单).
+--------------------------------------------------------
+For example(示例), to add a new layout(布局) to the View  Layout(布局) menu, create an entry(入口) such as:
+[
+    {
+        "id": "layout(布局)",
+        "children":
+        [
+            {
+                "caption": "Grid: 9",
+                "command": "set_layout(布局)",
+                "args":
+                {
+                    "cols": [0.0, 0.33, 0.66, 1.0],
+                    "rows": [0.0, 0.33, 0.66, 1.0],
+                    "cells":
+                    [
+                        [0, 0, 1, 1], [1, 0, 2, 1], [2, 0, 3, 1],
+                        [0, 1, 1, 2], [1, 1, 2, 2], [2, 1, 3, 2],
+                        [0, 2, 1, 3], [1, 2, 2, 3], [2, 2, 3, 3]
+                    ]
+                }
+            },
+        ]
+    }
+]
+To find the "id" of entries(入口) in the Main.sublime-menu, use the View Package File command from the (command palette控制台) and select Default/Main.sublime-menu.
+--------------------------------------------------------
+
+--------------------------------------------------------
+Customization(定制)
+Users can customize(定制) the available(可用的) menus by creating an appropriately(适合地)-named file in their Packages/User/ directory.
+--------------------------------------------------------
+For example(示例), to customize(定制) the context(上下文) menu for files and folders in the side bar, create a file named Packages/User/Side Bar.sublime-menu. Adding(添加) the following would create an entry(入口) that would execute(执行) a (hypothetical(假设的)) command that would copy the path to the clipboard(剪贴板).
+[
+    {
+        "caption": "Copy Full Path",
+        "mnemonic(助记符)": "y",
+        "command": "copy_path",
+        "args": {"paths": []}
+    }
+]
+© Sublime HQ Pty Ltd
+Woollahra, Sydney.

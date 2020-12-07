@@ -1,0 +1,23 @@
+《sublime.Phantomset类》(此处的 set 是集合的意思，不是设置的意思)
+本类用于管理 phantoms 以及添加它们的进程，具体操作包括更新或从 view 中移除它们。
+
+构建函数
+参数
+描述
+
+phantomset(view, <key>)
+view:实例所附属的 view .
+key:可选,phantoms集合的名称.
+
+
+
+
+方法
+参数
+返回值
+描述
+
+update(phantom_list)
+phantom_list:包含一或多个 phantoms 的 list .
+none
+用 phantom_list 包含的 phantoms 更新实例中包含的 phantoms .

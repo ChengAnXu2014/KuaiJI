@@ -1,0 +1,322 @@
+《《简介》》
+
+Note that many of these events are triggered by the buffer underlying(作为...的底层) the view, and thus the method is only called once, with the first view as the parameter. 
+
+
+
+《《on_new(view)》》
+参数:view
+
+返回值:None
+
+描述:当新建buffer时被调用
+
+
+
+on_new_async(view)
+参数:view
+
+返回值:None
+
+描述:当在新建buffer进被调用;在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_clone(view)》》
+参数:view
+
+返回值:None
+
+描述:当克隆view时被调用
+Called when a view is cloned from an existing one. 
+
+
+
+《《on_clone_async(view)》》
+参数:view
+
+返回值:None
+
+描述:当克隆view时被调用,在单独进程中运行,且该单独进程不会阻止主程序运行
+Called when a view is cloned from an existing one. Runs in a separate(<动>分隔,<形>单独的) thread, and does not block(<名>块,<动>阻止) the application. 
+
+
+
+《《on_load(view)》》
+参数:view
+
+返回值:None
+
+描述:当文件加载完毕时被调用
+
+
+
+《《on_load_async(view)》》
+参数:view
+
+返回值:None
+
+描述:当文件加载完毕时被调用,在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_pre_close(view)》》
+参数:view
+
+返回值:None
+
+描述:在一个view将被关闭时被调用,程序会在调用完本方法后再关闭view
+
+
+
+《《on_close(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view被关闭之后被调用(在其它窗口仍可能有关联到相同buffer的view)
+
+
+
+《《on_pre_save(view)》》
+参数:view
+
+返回值:None
+
+描述:在一个view将被保存时被调用,程序会在调用完本方法后再保存view
+
+
+
+《《on_pre_save_async(view)》》
+参数:view
+
+返回值:None
+
+描述:在一个view将被保存时被调用,程序会在调用完本方法后再保存view,在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_post_save(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view被保存之后被调用
+
+
+
+《《on_post_save_async(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view被保存之后被调用,在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_modified(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view被修改之后被调用
+
+
+
+《《on_modified_async(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view被修改之后被调用,在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_selection_modified(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view中有被选中内容时被调用
+
+
+
+《《on_selection_modified_async(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view中有被选中内容时被调用,在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_activated(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view获得输入焦点时被调用
+
+
+
+《《on_activated_async(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view获得输入焦点时被调用,在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_deactivated(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view失去输入焦点时被调用
+
+
+
+《《on_deactivated_async(view)》》
+参数:view
+
+返回值:None
+
+描述:当一个view失去输入焦点时被调用,在单独进程中运行,且该单独进程不会阻止主程序运行
+
+
+
+《《on_hover(view, point, hover_zone)》》
+参数:
+view
+point:距离指针位置最近的坐标点
+hover_zone:在sublime模块中预定义的三个flag值:
+sublime.HOVER_TEXT:鼠标指针悬停在文本上
+sublime.HOVER_GUTTER:鼠标指针悬停在行标栏上
+sublime.HOVER_MARGIN:鼠标指针悬停在某行文本后的空白上
+
+返回值:None
+
+描述:当鼠标指针悬停在一个view上时被调用
+
+
+
+《《on_query_context(view, key, operator, operand, match_all)》》
+参数:
+view:
+key:
+operator:
+operand:
+match_all:
+
+返回值:bool 或 None
+
+描述:
+Called when determining to trigger a key binding with the given context key. If the plugin knows how to respond(回应) to the context, it should return either True or False. If the context is unknown, it should return None. 
+
+operator is one of: 
+sublime.OP_EQUAL: Is the value of the context equal to the operand? 
+sublime.OP_NOT_EQUAL: Is the value of the context not equal to the operand? 
+sublime.OP_REGEX_MATCH: Does the value of the context match the regex given in operand? 
+sublime.OP_NOT_REGEX_MATCH: Does the value of the context not match the regex given in operand? 
+sublime.OP_REGEX_CONTAINS: Does the value of the context contain a substring matching the regex given in operand? 
+sublime.OP_NOT_REGEX_CONTAINS: Does the value of the context not contain a substring matching the regex given in operand? 
+match_all should be used if the context relates to the selections: does every selection have to match (match_all == True), or is at least one matching enough (match_all == False)? 
+
+
+
+《《on_query_completions(view, prefix, locations)》》
+参数:
+view:
+prefix:
+locations:
+
+返回值:list, tuple 或 None
+
+描述:
+Called whenever completions are to be presented to the user. The prefix is a unicode string of the text to complete. 
+locations is a list of points. Since this method is called for all completions in every view no matter the syntax, view.match_selector(point, relevant_scope) should be called to determine if the point is relevant. 
+The return value must be one of the following formats: 
+None: no completions are provided 
+
+return None
+
+A list of 2-element lists/tuples. The first element is a unicode string of the completion trigger, the second is the unicode replacement text. 
+
+return [["me1", "method1()"], ["me2", "method2()"]]
+
+The trigger may contain a tab character (\t) followed by a hint to display in the right-hand side of the completion box. 
+
+return [
+    ["me1\tmethod", "method1()"],
+    ["me2\tmethod", "method2()"]
+]
+
+The replacement text may contain dollar-numeric fields such as a snippet does, e.g. $0, $1. 
+
+return [
+    ["fn", "def ${1:name}($2) { $0 }"],
+    ["for", "for ($1; $2; $3) { $0 }"]
+]
+
+A 2-element tuple with the first element being the list format documented above, and the second element being bit flags from the following list: 
+sublime.INHIBIT_WORD_COMPLETIONS: prevent Sublime Text from showing completions based on the contents of the view 
+sublime.INHIBIT_EXPLICIT_COMPLETIONS: prevent Sublime Text from showing completions based on .sublime-completions files 
+
+return (
+    [
+        ["me1", "method1()"],
+        ["me2", "method2()"]
+    ],
+    sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS
+)
+
+
+
+《《on_text_command(view, command_name, args)》》
+参数:
+view:
+command_name:
+args:
+
+返回值:(str, dict) 或 None
+
+描述:当一个text command被公 布时被调用
+Called when a text command is issued(公布). The listener may return a (command, arguments) tuple to rewrite the command, or None to run the command unmodified. 
+
+
+
+《《on_window_command(window, command_name, args)》》
+参数:
+window:
+command_name:
+args:
+
+返回值:(str, dict) 或 None:
+
+描述:当一个window command被公布时被调用
+Called when a window command is issued(公布). The listener may return a (command, arguments) tuple to rewrite the command, or None to run the command unmodified. 
+
+
+
+《《on_post_text_command(view, command_name, args)》》
+参数:
+view:
+command_name:
+args:
+
+返回值:None
+
+描述:当一个text command执行完毕后被调用
+
+
+
+《《on_post_window_command(window, command_name, args)》》
+参数:
+window:
+command_name:
+args:
+
+返回值:None
+
+描述:当一个window command执行完毕后被调用

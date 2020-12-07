@@ -1,0 +1,30 @@
+插件生命周期
+At importing time, plugins may not call any API functions, with the exception(例外) of sublime.version(), sublime.platform(), sublime.architecture()(结构) and sublime.channel()(频道).
+If a plugin defines(定义) a module(模块) level function plugin_loaded(), this will be called when the API is ready to use. Plugins may also define plugin_unloaded(), to get notified(通知) just before the plugin is unloaded.
+
+
+
+
+
+线程
+All API functions are thread-safe, however keep in mind that from the perspective(<名>思考) of code running in an alternate(交替的) thread, application state(状态) will be changing while the code is running.
+
+
+
+
+
+Units(单位) and Coordinates(坐标)
+API functions that accept(接受) or return coordinates or dimensions(平面区域) do so using (device-independent pixel设备独立像素):(dip) values. While in some cases these will be equivalent(相等的) to (device pixels设备像素):(dp), this is often (not the case并非如此). Per the CSS specification, minihtml treats the px unit as (device-independent设备独立的).
+
+
+
+
+
+Types
+This documentation generally(普遍地) refers(涉及) to simply Python data types. Some type names are (classes documented herein(在这里), however there are also a few custom type names that refer to construct with specific semantics:
+location: a tuple of (str, str, (int, int)) that contains information about a location of a symbol(字符). The first string is the absolute(完全的) file path, the second is the file path relative(相对的) to the project, the third element is a two-element tuple of the row and column.
+point: an int that represents the offset from the beginning of the editor buffer. The View methods text_point() and rowcol() allow converting to and from this format.
+value: any of the Python data types bool, int, float, str, list or dict.
+dip: a float that represents a device-independent pixel.
+vector: a tuple of (dip, dip) representing x and y coordinates.
+CommandInputHandler: a subclass of either TextInputHandler or ListInputHandler.

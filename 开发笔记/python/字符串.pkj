@@ -1,0 +1,384 @@
+《《字符串重复输出》》
+
+str1 = "I Love Aoi Sola!!!\n"
+print(str1 * 5)
+
+
+
+
+
+
+《《字符串下标》》
+《《截取字符串》》
+s = "0123456789jihgfedcba"
+print("[3]:" + s[3]) # 字符串下标可以是正整数
+print("[-3]:" + s[-3]) # 也可以是负整数
+
+# 截取下标2至6范围内的子字符串（含2不含6）
+print("[2:6]:" + s[2:6])
+
+# 截取下标-17至-12范围内的子字符串（含-17不含-12）
+print("[-17:-12]:" + s[-17:-12])
+
+# 截取下标5至结尾的子字符串
+print("[5:]:" + s[5:])
+
+# 截取开头至下标5的子字符串（不含5）
+print("[:5]:" + s[:5])
+
+# 截取下标0至17的字符串，步长分别为2、3、4
+# 步长为2，每两个取一个
+print("[0:17:2]" + s[0:17:2])
+# 步长为3，每三个取一个
+print("[0:17:3]" + s[0:17:3])
+# 步长为4，每四个取一个
+print("[0:17:4]" + s[0:17:4])
+
+
+
+
+
+
+《《字符串成员辨断》》
+
+用 in 和 not in 运算符辨断字符串中是否包含某内容
+
+in 运算符
+
+
+str1 = "I Love Aoi Sola!!!"
+
+if 'o' in str1:
+    print("if o in str1")
+else:
+    print("else o in str1")
+
+if 'Aoi' in str1:
+    print("if Aoi in str1")
+else:
+    print("else Aoi in str1")
+
+
+not in 运算符
+
+
+str1 = "I Love Aoi Sola!!!"
+
+if 'v' not in str1:
+    print("if v not in str1")
+else:
+    print("else v not in str1")
+
+if 'Love' not in str1:
+    print("if Love not in str1")
+else:
+    print("else Love not in str1")
+
+
+
+
+
+
+《《原始字符串》》
+
+
+# 原始字符串的语法就是在普通字符串前面加一个小写的"r"
+str1 = r"\n\f\t\r\v"
+
+# 或大写的"R"
+str2 = R"\n\f\t\r\v"
+
+# 原始字符串中的所有字符都只会被当成普通字符
+print("str1:" + str1)
+
+# 不会对原始字符串中的字符进行转义等操作
+print("str2:" + str2)
+
+
+
+
+
+
+《《转义字符》》
+
+转义字符					描述
+
+\(在行尾时)					续行符
+
+\\					反斜杠符号
+
+\'					单引号
+
+\"					双引号
+
+\a					响铃
+
+\b					退格(Backspace)
+
+\e					转义
+
+\000					空
+
+\n					换行
+
+\v					纵向制表符
+
+\t					横向制表符
+
+\r					回车
+
+\f					换页
+
+\udddd					四位十六进制整数字符编码：dddd代表的宽字符
+
+\xdd					二位十六进制整数字符编码：dd代表的字符
+
+\other					其它的字符以普通格式输出
+
+
+
+
+
+
+《《字符串格式化》》
+
+Python格式化字符串的语法与C语言只有些许不同
+
+str1 = "Aoi Sola"
+print("I Love %s!!!" % (str1))
+
+digit1 = 34
+print("She is %d years old." % (digit1))
+
+
+《《字符串格式化符号》》
+
+符号					描述
+%c					格式化字符及其ASCII码
+%s					格式化字符串
+%d					格式化整数
+%u					格式化无符号整型
+%o					格式化无符号八进制数
+%x					格式化无符号十六进制数
+%X					格式化无符号十六进制数（大写）
+%f					格式化浮点数字，可指定小数点后的精度
+%e					用科学计数法格式化浮点数
+%E					作用同%e，用科学计数法格式化浮点数
+%g					%f和%e的简写
+%G					%F 和 %E 的简写
+%p					用十六进制数格式化变量的地址
+
+
+《《字符串格式化符号辅助指令》》
+
+符号				功能
+
+*					定义宽度或者小数点精度
+
+-					用做左对齐
+
++					在正数前面显示加号( + )
+
+<sp>			在正数前面显示空格
+
+#					在八进制数前面显示零('0')，在十六进制前面显示'0x'或者'0X'.
+
+0					显示的数字前面填充'0'而不是默认的空格
+
+%					'%%'输出一个单一的'%'
+
+(var)			映射变量(字典参数)
+
+m.n.			m 是显示的最小总宽度,n 是小数点后的位数(如果可用的话).
+
+PS：Python2.6 开始，新增了一种格式化字符串的函数 str.format()。
+
+
+
+
+
+
+《《三引号》》
+
+Python 中三引号可以将复杂的字符串进行赋值。
+Python 三引号允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符。
+三引号的语法是一对连续的单引号或者双引号（通常都是成对的用）。
+ >>> hi = '''hi
+there'''
+>>> hi   # repr()
+'hi\nthere'
+>>> print hi  # str()
+hi
+there
+三引号让程序员从引号和特殊字符串的泥潭里面解脱出来，自始至终保持一小块字符串的格式是所谓的WYSIWYG（所见即所得）格式的。
+一个典型的用例是，当你需要一块HTML或者SQL时，这时当用三引号标记，使用传统的转义字符体系将十分费神。
+ errHTML = '''
+<HTML><HEAD><TITLE>
+Friends CGI Demo</TITLE></HEAD>
+<BODY><H3>ERROR</H3>
+<B>%s</B><P>
+<FORM><INPUT TYPE=button VALUE=Back
+ONCLICK="window.history.back()"></FORM>
+</BODY></HTML>
+'''
+cursor.execute('''
+CREATE TABLE users (
+login VARCHAR(8),
+uid INTEGER,
+prid INTEGER)
+''')
+
+
+
+
+
+
+《《Unicode字符串》》
+
+
+# Unicode字符串的语法和原始字符串语法很相似，只要在普通字符串前面加个小写的"u"
+uStr = u"嗫嗬嗭嗮嗰嗱嗲嗳嗴嗵哔嗷嗸嗹嗺嗻嗼嗽嗾嗿嘀嘁嘂"
+print(uStr)
+
+# 或大写的"U"就行了
+print(U"厷厸厹厺厼厽厾叀叁参叄叅叆叇亝嗫嗬嗭嗮嗰嗱嗲嗳嗴")
+
+
+
+
+
+
+《《字符串内建函数》》
+
+方法
+描述
+
+string.capitalize()
+把字符串的第一个字符大写
+
+string.center(width)
+返回一个原字符串居中,并使用空格填充至长度 width 的新字符串
+
+string.count(str, beg, end)
+返回 str 在 string 里面出现的次数，如果 beg 或者 end 指定则返回指定范围内 str 出现的次数.
+
+string.decode(encoding='UTF-8', errors='strict')
+以 encoding 指定的编码格式解码 string，如果出错默认报一个 ValueError 的 异 常 ， 除非 errors 指 定 的 是 'ignore' 或 者'replace'
+
+string.encode(encoding='UTF-8', errors='strict')
+以encoding指定的编码格式编码string,如果出错默认报一个 ValueError 的异常,除非 errors 指定的是'ignore'或者'replace'.
+
+string.endswith(obj, beg, end)
+检查字符串是否以 obj 结束，如果beg 或者 end 指定则检查指定的范围内是否以 obj 结束，如果是，返回 True,否则返回 False.
+
+string.expandtabs(tabsize=8)
+把字符串 string 中的 tab 符号转为空格，tab 符号默认的空格数是 8。
+
+string.find(str, beg, end)
+检测 str 是否包含在 string 中，如果 beg 和 end 指定范围，则检查是否包含在指定范围内，如果是返回开始的索引值，否则返回-1.
+
+string.format()
+格式化字符串
+
+string.index(str, beg, end)
+跟find()方法一样，只不过如果str不在 string中会报一个异常.
+
+string.isalnum()
+如果 string 至少有一个字符并且所有字符都是字母或数字则返回 True,否则返回 False
+
+string.isalpha()
+如果 string 至少有一个字符并且所有字符都是字母则返回 True,否则返回 False
+
+string.isdecimal()
+如果 string 只包含十进制数字则返回 True 否则返回 False.
+
+string.isdigit()
+如果 string 只包含数字则返回 True 否则返回 False.
+
+string.islower()
+如果 string 中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是小写，则返回 True，否则返回 False
+
+string.isnumeric()
+如果 string 中只包含数字字符，则返回 True，否则返回 False
+
+string.isspace()
+如果 string 中只包含空格，则返回 True，否则返回 False.
+
+string.istitle()
+如果 string 是标题化的(见 title())则返回 True，否则返回 False
+
+string.isupper()
+如果 string 中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是大写，则返回 True，否则返回 False
+
+string.join(seq)
+以 string 作为分隔符，将 seq 中所有的元素(的字符串表示)合并为一个新的字符串
+
+string.ljust(width)
+返回一个原字符串左对齐,并使用空格填充至长度 width 的新字符串
+
+string.lower()
+转换 string 中所有大写字符为小写.
+
+string.lstrip()
+截掉 string 左边的空格
+
+string.maketrans(intab,<outtab)
+用于创建字符映射的转换表，对于接受两个参数的最简单的调用方式，第一个参数是字符串，表示需要转换的字符，第二个参数也是字符串表示转换的目标。
+
+max(str)
+返回字符串 str 中最大的字母。
+
+min(str)
+返回字符串 str 中最小的字母。
+
+string.partition(str)
+有点像 find()和 split()的结合体,从 str 出现的第一个位置起,把 字 符 串 string 分 成一 个 3 元 素 的 元 组 (string_pre_str,str,string_post_str),如果 string中不包含str 则 string_pre_str == string.
+
+string.replace(str1, str2,num)
+把 string 中的 str1 替换成 str2,如果 num 指定，则替换不超过 num 次.
+
+string.rfind(str, beg,end)
+类似于 find()函数，不过是从右边开始查找.
+
+string.rindex( str, beg,end)
+类似于 index()，不过是从右边开始.
+
+string.rjust(width)
+返回一个原字符串右对齐,并使用空格填充至长度 width 的新字符串
+
+string.rpartition(str)
+类似于 partition()函数,不过是从右边开始查找
+
+string.rstrip()
+删除string字符串末尾的空格.
+
+string.split(str="",num=string.count(str))
+以 str 为分隔符切片 string，如果 num 有指定值，则仅分隔 num+1 个子字符串
+
+string.splitlines(<keepends>)
+按照行('\r', '\r\n', \n')分隔，返回一个包含各行作为元素的列表，如果参数 keepends 为 False，不包含换行符，如果为 True，则保留换行符。
+
+string.startswith(obj, beg,end)
+检查字符串是否是以 obj 开头，是则返回 True，否则返回 False。如果beg 和 end 指定值，则在指定范围内检查.
+
+string.strip([obj])
+在string上执行lstrip()和rstrip()
+
+string.swapcase()
+翻转string中的大小写
+
+string.title()
+返回"标题化"的 string,就是说所有单词都是以大写开始，其余字母均为小写(见 istitle())
+
+string.translate(str, del="")
+根据 str 给出的表(包含 256 个字符)转换 string 的字符,要过滤掉的字符放到 del 参数中
+
+string.upper()
+转换 string 中的小写字母为大写
+
+string.zfill(width)
+返回长度为 width 的字符串，原字符串 string 右对齐，前面填充0
+
+
+
+

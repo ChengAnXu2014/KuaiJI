@@ -1,0 +1,171 @@
+《《ApplicationCommand》》
+方法
+参数
+返回值
+描述
+
+
+run(<args>)
+args:可选,重写时的自定义参数
+
+None
+
+当命令被调用时运行
+
+
+is_enabled(<args>)
+args:可选,重写时的自定义参数
+
+bool 类型值
+
+如果命令可以运行则返回 True,否则返回 False
+
+
+is_visible(<args>)
+args:可选,重写时的自定义参数
+
+bool 类型值
+
+如果命令在菜单中可见则返回 True,否则返回 False
+
+
+is_checked(<args>)
+args:可选,重写时的自定义参数
+
+bool 类型值
+
+如果命令对应的菜单条目有复选框(菜单文件(.sublime-menu)中有 checkbox(复选框) 属性),则返回 True,否则返回 False
+
+
+description(<args>)
+args:重写时的自定义参数
+
+str 类型(字符串)
+
+
+Returns a description of the command with the given arguments. Used in the menu, if no caption is provided. Return None to get the default description. 
+
+
+input(args)
+args:重写时的自定义参数
+
+CommandInputHandler or None
+
+If this returns something other than None, the user will be prompted(提醒) for an input before the command is run in the Command Palette. 
+
+
+
+
+
+
+《《WindowCommand》》
+由本基类(base class)派生出的窗口命令(WindowCommands)会为每一个新建的窗口提供新的实例
+对应窗口的对象(window object)可以在命令内部通过 self.window 语句访问
+
+方法
+参数
+返回值
+描述
+
+
+run(<args>)
+args:可选,重写时的自定义参数
+
+None
+
+当命令被调用时运行
+
+
+is_enabled(<args>)
+args:可选,重写时的自定义参数
+
+bool 类型值
+
+如果命令可以运行则返回 True,否则返回 False
+
+
+is_visible(<args>)
+args:可选,重写时的自定义参数
+
+bool 类型值
+
+如果命令在菜单中可见则返回 True,否则返回 False
+
+
+description(<args>)
+args:可选,重写时的自定义参数
+
+str 类型值(字符串)
+
+Returns a description of the command with the given arguments. Used in the menu, if no caption is provided. Return None to get the default description. 
+
+
+input(args)
+args:重写时的自定义参数
+
+CommandInputHandler or None
+
+If this returns something other than None, the user will be prompted(提醒) for an input before the command is run in the Command Palette. 
+
+
+
+
+
+
+《《TextCommand》》
+由本基类(base class)派生出的文本命令(TextCommands)会为每一个新建的视域(view)提供新的实例
+对应的视域对象(view object)可以在命令内部通过 self.view 语句访问
+
+方法
+参数
+返回值
+描述
+
+
+run(edit, <args>)
+edit:edit对象,用于对修改文本内容的操作进行分组,以便于redo和undo
+args:可选,重写时的自定义参数
+
+None
+
+当命令被调用时运行
+
+
+is_enabled(<args>)
+args:可选,重写时的自定义参数
+
+bool 类型值
+
+如果命令可以运行则返回 True,否则返回 False
+
+
+is_visible(<args>)
+args:可选,重写时的自定义参数
+
+bool 类型值
+
+如果命令在菜单中可见则返回 True,否则返回 False
+
+
+description(<args>)
+args:可选,重写时的自定义参数
+
+str 类型值(字符串)
+
+Returns a description of the command with the given arguments. Used in the menus, and for Undo / Redo descriptions. Return None to get the default description. 
+
+
+want_event()
+无参数
+
+bool 类型值
+
+Return True to receive an event argument when the command is triggered by a mouse action. The event information allows commands to determine which portion of the view was clicked on. The default implementation returns False. 
+
+
+input(args)
+args:重写时的自定义参数
+
+CommandInputHandler or None
+
+If this returns something other than None, the user will be prompted(提醒) for an input before the command is run in the Command Palette. 

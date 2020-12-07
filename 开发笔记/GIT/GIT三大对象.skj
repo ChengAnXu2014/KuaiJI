@@ -1,0 +1,41 @@
+git中三大对象commit、tree和blob之间的关系
+口木槑 2019-03-18 21:47:40 2438 收藏 5
+分类专栏： git
+版权
+
+使用git最基本的命令行就是add 之后进行commit，每次commit之后才能进行push操作，这些是大家都知道的步骤。而git中的三大对象commit、tree和blob又指的是什么，它们之间又有什么关系呢，对此进行简单介绍与记录。
+
+首先通过一幅图来进行引入
+
+从图中可以清楚的看到，一个commit对象里面会包含有 tree(相当于文件夹)、parent、author和committer；一个tree里面会包含tree和blob(具体的内容)；而一个blob指的就是具体的文件内容。在git中，blob与文件名无关，只与文件内容有关，即文件内容相同，在git中是同一个blob。
+
+下面以具体的实例进行验证。使用命令：git  cat-file  -p  commitId号  查看一个具体的commit下的内容。
+
+步骤一：使用git log查看已提交的commit记录，如下图。
+
+步骤二：选取提交历史中的一个commit使用命令git cat-file -p commitId号进行查看，从图中可以看出，一个commit里面含有一个tree(这次commit时期包含的文件内容)。
+
+步骤三：进入到某一具体的tree下面进行查看，继续使用git cat-file -p commitId号  命令，可以看到一个tree下面确实包含有tree和blob。
+
+步骤四：进入到某一具体的blob进行查看，验证是否一个blob代表一个文件内容(进入到具体的blob下，有的blob能直接解析打开，如html，txt等，有的不能，如图片等)。如图所示可以直接看到该blob所对应的index.html的文件内容。
+
+以上就是三者之间的关系。
+
+举例：在新建的git仓库中，有且仅有1个commit，仅仅包含/doc/readme，问这个仓库下包含的tree和blob的个数？
+
+首先，新建仓库test，在test下新建文件夹doc，doc文件夹下新建文件readme.txt，readme.txt文件下插入内容：Hello World
+
+进入到test仓库下，在还没有进行add的前提下，使用命令：git status查看当前仓库的状态，可以看到创建的文件夹和文件还没有添加到暂存区，所以接着使用命令：find .git/objects -type f 看不到有什么结果。如下图所示。
+
+接着使用git add将创建的文件夹和文件readme添加到暂存区，再使用git status命令进行状态查看后，使用命令：find .git/objects -type f 进行查看，可以看到此时git新创建了一个对象。如图 
+
+使用命令：git cat-file -t ID号  查看object的类型，由图可知，该object为blob，说明新的东西加入到暂存区，git会主动把暂存区的东西创建为blob。使用命令：git cat-file -p ID号  查看该blob的内容，可以得到内容就是readme中的内容。
+
+ 
+
+之后使用git commit -m "Add readme"进行提交，再使用命令：find .git/objects -type f  进行查看object对象的创建情况，如下图所示：可以看到有4个object，那这四个object分别代表的是什么类型和内容呢，可以分别使用  git cat-file -t ID号进行类型查看，git cat-file -p ID号  进行内容查看。
+
+从图中可以看出，这四个object分别表示一个commit、一个blob和两个tree。
+
+下面以一张草图给出四者的关系，也作为本介绍的结束。
+

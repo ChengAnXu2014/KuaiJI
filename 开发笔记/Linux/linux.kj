@@ -1,0 +1,87 @@
+《《sudo与su》》
+  我们都知道非常多的文件都仅仅有root有权限来改动，那么在我们平时的开发过程中都建议使用一般账号来登录进行开发。还记得前面说到的ssh吗。我们也是将同意root登录设置成no。到必要的时候再切换到root来进行操作，这样就不至于有风险。
+
+那么我们怎样切换身份呢。
+
+1.su
+
+        su是最简单的身份切换名，用su我们能够进行不论什么用户的切换，一般都是su - username，然后输入password就ok了，可是root用su切换到其它身份的时候是不须要输入password的。起初我都是用su来切换的，后来老大看见了说我这样的方式切换是不好的。你能够尝试其它的方式来切换。我认为这样切换非常方便啊，那究竟是不好在哪里呢。后面再看另外一种身份的切换方式就知道了。
+
+        一般我们切换身份都是切换到root，然后进行一些仅仅有root能干的事，比方改动配置文件。比方下载安装软件。这些都仅仅能是root才有权限干的事。切换到root能够是单纯的su，或者是su -和su - root，后面两个是一样的意思。
+
+
+        单纯使用su切换到root，读取变量的方式是non-login shell，这样的方式下非常多的变量都不会改变。尤其是PATH。所以root用的非常多的命令都仅仅能用绝对路径来运行。这样的方式仅仅是切换到root的身份。
+
+而用su -这样的方式的话，是login shell方式，它是先以root身份登录然后再运行别的操作。
+
+        假设我们仅仅要切换到root做一次操作就好了，仅仅要在su后面加个-c參数就好了。运行完这次操作后。又会自己主动切换回我们自己的身份。非常方便。
+
+        那么假设有非常多人管理这个主机的话，那不是非常多人都要知道root的password吗，并且可能有的人仅仅是单纯的进行一次root操作就能够了，这个时候，su方式就不是非常好，rootpassword越少人知道越好，越少人知道就越安全，这时就须要另外一种方式了。
+
+2.sudo
+
+        相比于su切换身份须要用户的password，常常性的是须要rootpassword，sudo仅仅是须要自己的password，就能够以其它用户的身份来运行命令。常常是以root的身份运行命令。也并不是全部人都能够用sudo：
+
+
+        这里我要查看/etc/shadow这个文件的前三行，可是却发现看不了，提示的错误是说我当前这个用户不在sudoers这个文件，所以sudo是依赖于/etc/sudoers这个配置文件的。
+
+sudo的运行有这样一个流程：
+
+        1).当用户运行sudo时，系统于/etc/sudoers文件里查找该用户是否有运行sudo的权限；
+
+        2).若用户具有可运行sudo的权限。那么让用户输入用户自己的password，注意这里输入的是用户自己的password。
+
+        3).假设password正确。变開始进行sudo后面的命令，root运行sudo是不须要输入password的，切换到的身份与运行者身份同样的时候。也不须要输入password。
+
+        以下看看/etc/sudoers这个配置文件：
+
+
+        为何刚開始仅仅有root能运行sudo，切换到root身份通过visudo查看/etc/sudoers这个配置文件，假设是vim /etc/sudoers是能够查看的，可是不能改动，由于sudoers这个文件是由语法的，仅仅能通过visudo来改动。第一个红色方框那行代码，这行代码是什么意思呢。第一列root不用多说，是用户账号，第二列的ALL意思是登陆者的来源主机名，第三列等号右边小括号里的ALL是代表能够切换的身份。第四列ALL是可运行的命令。
+
+        1).单个用户的sudoers语法：
+
+        假设我要我当前这个用户能运行root的全部操作，那么我仅仅要加一行learnpython ALL=(ALL) ALL。那么假设有非常多人须要运行sudo。那不是要写编写非常多行啊，这样不是非常麻烦，这样就要用到用户组了。
+
+        2).利用用户组处理visudo：
+
+        看看第二个红色方框那行代码。%wheel代表wheel用户组。假设我们将须要运行root全部操作的用户都加入到wheel用户组，或者我们自己定义的用户组。然后加入一行代码。那么就不用一个用户一个用户的加入进来了，这样不是非常省事啊。
+
+        3).限制用户sudo的权限：
+
+        可是常常我们不须要用户有那么大的权限。仅仅要让他们具有他们负责范围的权限就能够了。比方有的有的人来管理password，我们就仅仅让他能进行password的管理，而不让他有别的权限，这样就须要权限的控制了。
+
+假设我让我当前用户来管理password。即learnpython这个用户能使用passwd这个命令来帮root改动用户password。仅仅要加这行learnpython ALL=(root) /usr/bin/passwd，那么learnpython这个用户就能够使用passwd这个命令了：
+
+
+        可是假设仅仅是运行sudo passwd命令，改动的就是root的password，当然我们不希望普通用户能具有改动rootpassword的权限，那么在visudo的时候就须要将命令的參数限制好。如改成这样：
+
+[root@localhost ~]# visudo
+learnpython    ALL=(root)    !/usr/bin/passwd, /usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd root
+
+        4).通过别名设置visudo
+
+        查看sudoers这个文件的时候。你会看见User_Alias。Host_Alias和Cmnd_Alias这些东西，他们都是一些别名，User_Alias表示具有sudo权限的用户列表，就是第一列參数。Host_Alias表示主机的列表。就是第二列參数。Cmnd_Alias表示同意运行命令的列表，就是第四列參数。还有个Runas_Alias。我初始的sudoers里是没有的，这个表示用户以什么身份登录。也就是第三列參数。
+
+        所以假设有几个password管理员的话就能够加上例如以下代码：
+
+[root@localhost ~]# visudo
+User_Alias PWMNG = manager1, manager2, manager3
+Cmnd_Alias PWCMD = !/usr/bin/passwd, /usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd root
+PWMNG    ALL=(root)    PWCMD
+
+        5).sudo搭配su
+
+        从上面来看。我们都仅仅是切换到别的用户然后运行命令，接着就切回到我们自己的用户了。假设我们要像su那样直接切换到root。然后干自己想干的。这个时候，就要将命令改动成/bin/su -。例如以下：
+
+[root@localhost ~]# visudo
+User_Alias ADMINS = user1, user2, user3
+ADMINS    ALL=(root)    /bin/su -
+
+        当然这个是须要谨慎了，由于这样用户user1。user2，user3等就直接切换到root了，切换后他们就是老大了。
+
+
+        有没有发现，当我们连续使用sudo的时候，在一定时间内是不用再次输入我们的password，这个事实上是系统自己设定的，在五分钟之内运行sudo仅仅须要输入一次password就能够了。
+
+3.总结
+
+        了解完su和sudo，是不是发现sudo有太多的优点了。su方式切换是须要输入目标用户的password。而sudo仅仅须要输入自己的password，所以sudo能够保护目标用户的password不外流的。当帮root管理系统的时候，su是直接将root全部权利交给用户。而sudo能够更好分工，仅仅要配置好/etc/sudoers，这样sudo能够保护系统更安全，并且分工明白，有条不紊。

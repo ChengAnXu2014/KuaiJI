@@ -1,0 +1,40 @@
+view
+extract_scope(point)
+region
+returns the extent(范围) of the syntax(语法) scope(作用域) name assigned(分配) to the character(字符) at the given point. 
+
+scope_name(point)
+str
+returns the syntax(语法) scope(作用域) name assigned(分配) to the character(字符) at the given point. 
+
+match_selector(point, selector)
+bool
+checks the selector against the scope(作用域) at the given point, returning a bool if they match. 
+
+score_selector(point, selector)
+int
+matches the selector against the scope(作用域) at the given point, returning a score. a score of 0 means no match, above 0 means a match. different selectors may be compared(比较) against the same scope(作用域): a higher score means the selector is a better match for the scope(作用域). 
+
+add_regions(key, region_list, <scope(作用域)>, <icon(图标)>, <flags>)
+none
+add a set(组) of regions to the view. if a set(组) of regions already exists(存在) with the given key, they will be overwritten(覆写). the scope(作用域) is used to source(<动>获得) a color to draw the regions in, it should be the name of a scope(作用域), such as "comment" or "string". if the scope(作用域) is empty, the regions won't be drawn. 
+
+the optional(可选的) icon(图标) name, if given, will draw the named icons in the gutter(行标栏) next to each region. the icon(图标) will be tinted(染色) using the color associated(相关的) with the scope(作用域). valid(有效的) icon(图标) names are dot(点), circle(圆圈) and bookmark(书签). the icon(图标) name may also be a full package relative path, such as packages/theme - default/dot(点).png. 
+
+the optional(可选的) flags parameter is a bitwise(按位) combination of: 
+sublime.draw_empty: draw empty regions with a vertical(垂直的) bar. by default, they aren't drawn at all. 
+sublime.hide_on_minimap: don't show the regions on the minimap. 
+sublime.draw_empty_as_overwrite: draw empty regions with a horizontal(水平的) bar instead of a vertical(垂直的) one. 
+sublime.draw_no_fill: disable filling the regions, leaving only the outline. 
+sublime.draw_no_outline: disable drawing the outline of the regions. 
+sublime.draw_solid_underline: draw a solid(实心的) underline below the regions. 
+sublime.draw_stippled_underline: draw a stippled underline below the regions. 
+sublime.draw_squiggly_underline: draw a squiggly underline below the regions. 
+sublime.persistent: save the regions in the session. 
+sublime.hidden: don't draw the regions. 
+the underline styles are exclusive, either zero or one of them should be given. if using an underline, sublime.draw_no_fill and sublime.draw_no_outline should generally be passed in. 
+
+style_for_scope(scope_name)
+dict
+accepts a string scope(作用域) name and returns a dict of style information, include the keys foreground(前景), bold(粗体), italic(斜体), source_line, source_column and source_file. if the scope(作用域) has a background color set(组), the key background will be present(<形>存在). the foreground(前景) and background colors are normalized(标准化) to the six character(字符) hex form(形式) with a leading hash(井号), e.g. #ff0000.
+

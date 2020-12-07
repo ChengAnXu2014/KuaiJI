@@ -1,0 +1,6 @@
+《《append(object)》》
+参数:object:要追加的对象
+
+返回值:无
+
+描述:在列表末尾追加新对象 object
