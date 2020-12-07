@@ -10,10 +10,22 @@
     "rules":
       [
         {
-          "name": "Code",
-          "scope": "code",
+          "name": "Ita",
+          "scope": "ita",
           "foreground": "var(blue6)",
           "font_style": "italic"
+        },
+        {
+          "name": "Bod",
+          "scope": "bod",
+          "foreground": "var(blue6)",
+          "font_style": "bold"
+        },
+        {
+          "name": "BoldIta",
+          "scope": "itabod",
+          "foreground": "var(blue6)",
+          "font_style": "bold italic"
         },
         {
           "name": "Emph",

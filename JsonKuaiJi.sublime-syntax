@@ -12,7 +12,11 @@ contexts:
           scope: head
         - match: '\b[pP][sS]:.*$'
           scope: em.ps
-        - match: '^ [^ ].+?:'
+        - match: '^ [^ ].*?:'
           scope: em.label
-        - match: '`[-_0-9A-z =<>{}\[\]():;,.]+?`'
-          scope: code
+        - match: '`[^`]*?`'
+          scope: ita
+        - match: ' `[^`]*?`(?! )'
+          scope: bod
+        - match: ' `[^`]*?` '
+          scope: itabod

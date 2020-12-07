@@ -12,26 +12,26 @@ class FindInFileCommand(sublime_plugin.TextCommand):
 
 		titles_list=[]
 		titleIndex=0
-		titleRegex=''
-		if self.view.settings().get("kuaiji_title_prefix") and self.view.settings().get("kuaiji_title_sufix"):
-			titleRegex='(?<=^'+self.view.settings().get("kuaiji_title_prefix")+').*(?='+self.view.settings().get("kuaiji_title_sufix")+'$)'
+		titleRegex=u''
+		if self.view.settings().get(u"kuaiji_title_prefix") and self.view.settings().get(u"kuaiji_title_sufix"):
+			titleRegex=u'(?<=^'+self.view.settings().get(u"kuaiji_title_prefix")+u').*(?='+self.view.settings().get(u"kuaiji_title_sufix")+u'$)'
 		else:
-			titleRegex='(?<=^<<).*(?=>>$)'
+			titleRegex=u'(?<=^<<).*(?=>>$)'
 
 
 		titleRegions_list=self.view.find_all(titleRegex)
-		self.view.add_regions("titles", titleRegions_list, "head")
+		self.view.add_regions(u"titles", titleRegions_list, u"head")
 		if not titleRegions_list:
-			sublime.status_message("Can't find any title")
+			sublime.status_message(u"Can't find any title")
 		else:
 			for titleRegion in titleRegions_list:
 				titleIndex+=1
 				if(titleIndex<10):
-					prefix=str(titleIndex)+"         "
+					prefix=str(titleIndex)+u"         "
 				elif(10<=titleIndex<100):
-					prefix=str(titleIndex)+"       "
+					prefix=str(titleIndex)+u"       "
 				else:
-					prefix=str(titleIndex)+"     "
+					prefix=str(titleIndex)+u"     "
 
 
 				title=self.view.substr(titleRegion)
