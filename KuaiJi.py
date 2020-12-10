@@ -1,39 +1,43 @@
 import os
+import re
 import sublime
 import sublime_plugin
 
 class FindInFileCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
-
-		def click(index):
+		def on_done(index):
 			if index >= 0:
 				self.view.show_at_center(titleRegions_list[index])
 
 
 		titles_list=[]
-		titleIndex=0
-		titleRegex=u''
-		if self.view.settings().get(u"kuaiji_title_prefix") and self.view.settings().get(u"kuaiji_title_sufix"):
-			titleRegex=u'(?<=^'+self.view.settings().get(u"kuaiji_title_prefix")+u').*(?='+self.view.settings().get(u"kuaiji_title_sufix")+u'$)'
-		else:
-			titleRegex=u'(?<=^<<).*(?=>>$)'
+		supTitles_list=[]
+		supTitles_dict={}
+		supTitles=u''
+		titleRgx=u'^\.+[^.].*(?=:$)'
+		preRgx=u'.'
 
 
-		titleRegions_list=self.view.find_all(titleRegex)
-		self.view.add_regions(u"titles", titleRegions_list, u"head")
-		if not titleRegions_list:
-			sublime.status_message(u"Can't find any title")
-		else:
-			for titleRegion in titleRegions_list:
-				titleIndex+=1
-				if(titleIndex<10):
-					prefix=str(titleIndex)+u"         "
-				elif(10<=titleIndex<100):
-					prefix=str(titleIndex)+u"       "
-				else:
-					prefix=str(titleIndex)+u"     "
+		titleRegions_list=self.view.find_all(titleRgx)
+		for titleRegion in titleRegions_list:
+			title=self.view.substr(titleRegion)
+			(hierPre,title)=re.match(u'(^\.+)([^.].+)', title).groups()
+			supTitles_dict[hierPre]=title
+			preIndex=preRgx
+			while hierPre != preIndex:
+				if preIndex not in supTitles_dict:
+					supTitles_dict[preIndex]=u'缺失'
 
 
-				title=self.view.substr(titleRegion)
-				titles_list.append(prefix+title)
-			self.view.window().show_quick_panel(titles_list,click)
+				supTitles_list.append(supTitles_dict[preIndex]+u'/')
+				preIndex+=preRgx
+
+
+			titles_list.append([title,supTitles.join(supTitles_list)])
+			supTitles_list=[]
+			supTitles=u''
+
+
+		print(titles_list)
+		sublime.status_message(u'找到'+str(len(titles_list))+u'个标题')
+		self.view.window().show_quick_panel(titles_list, on_done)

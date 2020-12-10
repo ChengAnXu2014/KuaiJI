@@ -3,12 +3,33 @@
     "author": "ChengAnXu",
     "variables":
       {
-        "emph": "hsl(100, 100%, 60%)",
-        "head": "#00ffff",
-        "green1": "hsl(114, 25%, 50%)"
+        "hilitbck": "hsl(210, 15%, 30%)",
+        "hilita": "hsl(180,100%,100%)",
+        "hilita1": "hsl(180,95%,50%)",
+        "hilita2": "hsl(180,90%,45%)",
+        "hilita3": "hsl(180,85%,40%)",
+        "hilita4": "hsl(180,80%,35%)",
+        "hilita5": "hsl(180,75%,30%)",
+        "hilitb": "hsl(100, 100%, 65%)",
+        "hilitb1": "hsl(100, 95%, 60%)",
+        "hilitb2": "hsl(100, 90%, 55%)",
+        "hilitb3": "hsl(100, 85%, 50%)",
+        "hilitb4": "hsl(100, 80%, 45%)",
+        "hilitb5": "hsl(100, 75%, 40%)",
+        "white": "hsl(114, 25%, 54%)"
       },
     "rules":
       [
+        {
+          "name": "KuaiJiSource",
+          "scope": "source.kj",
+          "foreground": "var(white)"
+        },
+        {
+          "name": "HilitBackground",
+          "scope": "hibck",
+          "background": "var(hilitbck)"
+        },
         {
           "name": "Ita",
           "scope": "ita",
@@ -28,29 +49,65 @@
           "font_style": "bold italic"
         },
         {
-          "name": "Emph",
-          "scope": "em",
-          "foreground": "var(emph)"
+          "name": "Tag1",
+          "scope": "tag1",
+          "foreground": "var(hilitb1)",
+          "font_style": "italic"
         },
         {
-          "name": "KuaiJiSource",
-          "scope": "source.kj",
-          "foreground": "var(green1)"
+          "name": "Tag2",
+          "scope": "tag2",
+          "foreground": "var(hilitb2)",
+          "font_style": "italic"
         },
         {
-            "name": "Header",
-            "scope": "head",
-            "foreground": "var(head)"
+          "name": "Tag3",
+          "scope": "tag3",
+          "foreground": "var(hilitb3)",
+          "font_style": "italic"
         },
         {
-            "name": "Ps",
-            "scope": "em.ps",
+          "name": "Tag4",
+          "scope": "tag4",
+          "foreground": "var(hilitb4)",
+          "font_style": "italic"
+        },
+        {
+          "name": "Tag5",
+          "scope": "tag5",
+          "foreground": "var(hilitb5)",
+          "font_style": "italic"
+        },
+        {
+            "name": "Title1",
+            "scope": "hibck.title1",
+            "foreground": "var(hilita1)"
+        },
+        {
+            "name": "Title2",
+            "scope": "hibck.title2",
+            "foreground": "var(hilita2)"
+        },
+        {
+            "name": "Title3",
+            "scope": "hibck.title3",
+            "foreground": "var(hilita3)"
+        },
+        {
+            "name": "Title4",
+            "scope": "hibck.title4",
+            "foreground": "var(hilita4)"
+        },
+        {
+            "name": "Title5",
+            "scope": "hibck.title5",
+            "foreground": "var(hilita5)"
+        },
+        {
+            "name": "Emph",
+            "scope": "emph",
+            "foreground": "var(red)",
             "font_style": "bold"
-        },
-        {
-            "name": "Label",
-            "scope": "em.label",
-            "font_style": "italic"
         }
       ]
 }

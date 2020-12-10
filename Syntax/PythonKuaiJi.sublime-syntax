@@ -1,0 +1,38 @@
+%YAML 1.2
+---
+file_extensions:
+  - pkj
+scope: source.kj
+contexts:
+  main:
+    - match: ""
+      push: Packages/Python/Python.sublime-syntax
+      with_prototype:
+        - match: '^\.[^.].*:$'
+          scope: hibck.title1
+        - match: '^\.{2}[^.].*:$'
+          scope: hibck.title2
+        - match: '^\.{3}[^.].*:$'
+          scope: hibck.title3
+        - match: '^\.{4}[^.].*:$'
+          scope: hibck.title4
+        - match: '^\.{5}[^.].*:$'
+          scope: hibck.title5
+        - match: '!:.*?!'
+          scope: emph
+        - match: '^ [^ ].*?:'
+          scope: tag1
+        - match: '^ {2}[^ ].*?:'
+          scope: tag2
+        - match: '^ {3}[^ ].*?:'
+          scope: tag3
+        - match: '^ {4}[^ ].*?:'
+          scope: tag4
+        - match: '^ {5}[^ ].*?:'
+          scope: tag5
+        - match: '`[^`]+?`'
+          scope: ita
+        - match: '``[^`]+?`(?!`)'
+          scope: bod
+        - match: '``[^`]+?``'
+          scope: itabod
