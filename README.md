@@ -26,7 +26,7 @@
 ## 用法
 在使用本插件之前，要先做一些准备工作：  
 1. 打开***Sublime Text 3***，通过菜单**Preferences => Color Scheme**启用*mariana*主题。  
-2. 打开你下载的*KuaiJi*文件夹内的*笔记*文件夹，用*Sublime Text 3*打开其中的任意一个文件。  
+2. 打开你下载的*KuaiJi*文件夹内的*笔记*文件夹，用***Sublime Text 3***打开其中的任意一个文件。  
 3. 通过菜单**KuaiJi => Find In File**或快捷键`alt+m`调用本插件。  
 -----
 你会看到一个快捷面板中列出了你打开的笔记示例文件中所有的*标题*，非顶级的*标题*下还会有一行小字标出它所属的上级*标题*；随便点击一个*标题*条目，文档就会自动跳转到该*标题*所在位置。
@@ -56,8 +56,10 @@ print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
 2. `!:强调内容!`:可位于文本的任何位置，以英文感叹号加冒号开始，以另一个英文感叹号结尾；会用十分扎眼的颜色高亮显示，可用于文本中需要特别强调的部分。  
 
 
-### 扩展名
-本插件的初衷是作者为了方便查阅自学编程所作的笔记而写。为了使笔记中出现的代码和关键字能支持对应编程语言的样式化显示，定义了以下扩展名：  
+### 源代码样式化显示
+本插件的初衷是作者为了方便查阅自学编程所作的笔记而写。  
+为了使笔记中出现的代码和关键字能使用***Sublime Text 3***默认的对各种编程语言源代码的样式化显示，本插件提供了以下两种方式：  
+1. 通过扩展名为整个笔记文件指定编程语言：  
 .kj:只支持单纯的*KuaiJi*语法。  
 .ckj:除了*KuaiJi*语法外，还支持*C/C++*语法。  
 .cskj:除了*KuaiJi*语法外，还支持*CSS*语法。  
@@ -66,3 +68,69 @@ print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
 .pkj:除了*KuaiJi*语法外，还支持*Phthon*语法。  
 .skj:除了*KuaiJi*语法外，还支持*shell*语法。  
 .ykj:除了*KuaiJi*语法外，还支持*YAML*语法。  
+
+2. 为笔记中的某个段落指定编程语言：  
+*C/C++*:  
+```
+`c
+# include<stdio.h>
+int main(void)
+{
+	printf("hello world");
+	return 0;
+}
+`
+```
+*CSS*:  
+```
+`cs
+.clsContainer
+{
+	background: #ff0000;
+}
+`
+```
+*HTML*  
+```
+`hl
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+</body>
+</html>
+`
+```
+*JavaScript*:  
+```
+`js
+var name="Aoi Sola";
+`
+```
+*Python*:  
+```
+`py
+import os
+print("hello world")
+`
+```
+*Shell*  
+```
+`sh
+echo 'hellow world'
+`
+```
+*YAML*  
+```
+`yl
+- match: '^`cs$\n'
+  scope: code.hr.kj
+  embed: Packages/CSS/CSS.sublime-syntax
+  escape: '^`$\n'
+  escape_captures:
+    0: code.hr.kj
+`
+```
