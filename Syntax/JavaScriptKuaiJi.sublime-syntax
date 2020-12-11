@@ -1,12 +1,12 @@
 %YAML 1.2
 ---
 file_extensions:
-  - ckj
+  - jkj
 scope: source.kj
 contexts:
   main:
     - match: ""
-      push: Packages/C++/C++.sublime-syntax
+      push: Packages/JavaScript/JSON.sublime-syntax
       with_prototype:
         - match: '^\.[^.].*:$'
           scope: hibck.title1
@@ -54,15 +54,15 @@ contexts:
           escape: '^`$\n'
           escape_captures:
             0: code.hr.kj
-        - match: '^`js$\n'
-          scope: code.hr.kj
-          embed: Packages/JavaScript/JavaScript.sublime-syntax
-          escape: '^`$\n'
-          escape_captures:
-            0: code.hr.kj
         - match: '^`hl$\n'
           scope: code.hr.kj
           embed: Packages/HTML/HTML.sublime-syntax
+          escape: '^`$\n'
+          escape_captures:
+            0: code.hr.kj
+        - match: '^`c$\n'
+          scope: code.hr.kj
+          embed: Packages/C++/C++.sublime-syntax
           escape: '^`$\n'
           escape_captures:
             0: code.hr.kj

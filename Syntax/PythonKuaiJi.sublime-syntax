@@ -36,3 +36,39 @@ contexts:
           scope: bod
         - match: '``[^`]+?``'
           scope: itabod
+        - match: '^`sh$\n'
+          scope: code.hr.kj
+          embed: Packages/ShellScript/Bash.sublime-syntax
+          escape: '^`$\n'
+          escape_captures:
+            0: code.hr.kj
+        - match: '^`yl$\n'
+          scope: code.hr.kj
+          embed: Packages/YAML/YAML.sublime-syntax
+          escape: '^`$\n'
+          escape_captures:
+            0: code.hr.kj
+        - match: '^`js$\n'
+          scope: code.hr.kj
+          embed: Packages/JavaScript/JavaScript.sublime-syntax
+          escape: '^`$\n'
+          escape_captures:
+            0: code.hr.kj
+        - match: '^`hl$\n'
+          scope: code.hr.kj
+          embed: Packages/HTML/HTML.sublime-syntax
+          escape: '^`$\n'
+          escape_captures:
+            0: code.hr.kj
+        - match: '^`c$\n'
+          scope: code.hr.kj
+          embed: Packages/C++/C++.sublime-syntax
+          escape: '^`$\n'
+          escape_captures:
+            0: code.hr.kj
+        - match: '^`cs$\n'
+          scope: code.hr.kj
+          embed: Packages/CSS/CSS.sublime-syntax
+          escape: '^`$\n'
+          escape_captures:
+            0: code.hr.kj

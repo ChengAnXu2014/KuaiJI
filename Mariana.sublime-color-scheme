@@ -3,6 +3,8 @@
     "author": "ChengAnXu",
     "variables":
       {
+        "hrbck": "hsl(0, 0%, 15%)",
+        "hrfrg": "hsl(0, 0%, 45%)",
         "hilitbck": "hsl(210, 15%, 30%)",
         "hilita": "hsl(180,100%,100%)",
         "hilita1": "hsl(180,95%,50%)",
@@ -20,6 +22,12 @@
       },
     "rules":
       [
+        {
+          "name": "Code",
+          "scope": "code.hr.kj",
+          "background": "var(hrbck)",
+          "foreground": "var(hrfrg)"
+        },
         {
           "name": "KuaiJiSource",
           "scope": "source.kj",
