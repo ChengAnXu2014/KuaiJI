@@ -26,7 +26,7 @@ class FindInFileCommand(sublime_plugin.TextCommand):
 			preIndex=preRgx
 			while hierPre != preIndex:
 				if preIndex not in supTitles_dict:
-					supTitles_dict[preIndex]=u'缺失'
+					supTitles_dict[preIndex]=u'miss'
 
 
 				supTitles_list.append(supTitles_dict[preIndex]+u'/')
@@ -39,5 +39,5 @@ class FindInFileCommand(sublime_plugin.TextCommand):
 
 
 		print(titles_list)
-		sublime.status_message(u'找到'+str(len(titles_list))+u'个标题')
+		sublime.status_message(u'found'+str(len(titles_list))+u'titles')
 		self.view.window().show_quick_panel(titles_list, on_done)
