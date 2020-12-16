@@ -1,0 +1,85 @@
+%YAML 1.2
+---
+file_extensions:
+  - kj
+scope: string
+
+variables:
+  spenam: 'XML|HTML|YAML|Xml|Html|Yaml|xml|html|yaml|C|c|Python|python|JSON|Json|json|JAVA|Java|java|JavaScript|javascript|js|JS|Js|GIT|git|Git|index|Index|Head|HEAD'
+  wrdpre: '(?<![A-z0-9_])'
+  wrdsuf: '(?![A-z0-9_])'
+  identifier: '{{wrdpre}}[A-z_][A-z0-9_]*{{wrdsuf}}'
+  argsufix: '[''"A-z0-9\[\]<> ,{}=_-]*\)'
+  vartype: 'int|char|str|bool|double|float|long|short|signed|unsigned|void|var|flag|array'
+  stcls: 'Region|Selection|View|Window|Sublime(?! [Tt]ext)|Sublime_plugin|Settings'
+  stins: 'buffer|id|point|region|selection|view|window|sublime(?! [tT]ext)|sublime_plugin|settings|vector'
+  stpath: '[Pp]ackages/|[Uu]ser/|[Ii]nstalled [Pp]ackages/'
+  path: '[A-z0-9/_]+'
+  contype: 'false|true|FALSE|TRUE|False|True|None|none|NONE|NULL|null|Null|'
+  varlag: 'self|'
+  keyctrl: 'import|if|for|while|else|elif|continue|break|return'
+
+contexts:
+  main:
+    - match: '^\.+[^.].*:$'
+      scope: invalid.illegal
+    - match: '^-.*:$'
+      scope: markup.bold comment
+      push: list
+    - match: '^ .*:$'
+      scope: markup.italic comment
+    - match: '`[^`]*`'
+      scope: comment markup.italic
+
+
+    - match: '([0-9][0-9.]*[0-9])|[0-9]'
+      scope: constant.numeric
+    - match: '[-+=*/%]'
+      scope: keyword.operator
+
+
+    - match: '{{wrdpre}}({{spenam}}){{wrdsuf}}'
+      scope: constant.numeric variable.function source.yaml string.unquoted.plain.out.yaml
+    - match: '{{wrdpre}}({{keyctrl}}){{wrdsuf}}'
+      scope: keyword.control
+    - match: '{{wrdpre}}({{varlag}}){{wrdsuf}}'
+      scope: variable.language
+    - match: '{{wrdpre}}({{stins}}){{wrdsuf}}'
+      scope: entity.name.class markup.italic
+    - match: '{{wrdpre}}({{stcls}}){{wrdsuf}}'
+      scope: entity.name.class
+    - match: '{{wrdpre}}({{vartype}}){{wrdsuf}}'
+      scope: storage.type
+    - match: '{{wrdpre}}({{contype}}){{wrdsuf}}'
+      scope: constant.language
+    - match: '({{identifier}})\s*(\()(?={{argsufix}})'
+      captures:
+        1: entity.name.function
+        2: variable.function
+      push: args
+
+  args:
+    - match: '{{identifier}}'
+      scope: variable.parameter
+    - match: '([''])(.*)([''])'
+      captures:
+        1: punctuation.definition.string.begin
+        2: string.quoted.single
+        3: punctuation.definition.string.end
+    - match: '(")(.*)(")'
+      captures:
+        1: punctuation.definition.string.begin
+        2: string.quoted.double
+        3: punctuation.definition.string.end
+    - match: '='
+      scope: keyword.operator
+    - match: '\)'
+      scope: variable.function
+      pop: true
+
+  list:
+    - include: main
+    - match: '^ .*?:'
+      scope: markup.italic comment
+    - match: '^$'
+      pop: true
