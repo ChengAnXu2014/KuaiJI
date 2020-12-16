@@ -38,6 +38,6 @@ class FindInFileCommand(sublime_plugin.TextCommand):
 			supTitles=u''
 
 
-		print(titles_list)
+		
 		sublime.status_message(u'found'+str(len(titles_list))+u'titles')
 		self.view.window().show_quick_panel(titles_list, on_done)
