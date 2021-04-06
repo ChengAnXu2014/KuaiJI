@@ -31,3 +31,12 @@ Then click one of the *title*s shown in the *quick panel*, current *view* will s
 The command binded to **KuaiJi => Find In File** menu and `alt+m` shortcut is `find_in_file`,
  or in *camel mode* `FindInFile`.  
 You can use it to customize the menu and shortcut.
+
+
+# Special words
+*KuaiJi* use **sublime-syntax** to make the special words in the note files colorful.  
+The special words include but not limited to:  
+Key words of language *C*, e.g. `if else char int float` etc;  
+Key words of script *Python*, e.g. `self list dict tuple set bytes bytearray` etc;  
+Key words of other program languages;  
+Other special words like language names, e.g. `XML HTML YAML Python Json JS ` etc.
