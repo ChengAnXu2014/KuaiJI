@@ -22,7 +22,7 @@ The non-top-level *title*s in the *quick panel*, will have their suplevel *title
 
 
 # How to use *KuaiJi*?
-Open a file named `*.kj`, and have *title*s in it.  
+Open a file named `*.kj`, which contain *title*s in it.  
 Use **KuaiJi => Find In File** menu or `alt+m` shortcut to invoke the *quick panel*.  
 Then click one of the *title*s shown in the *quick panel*, current *view* will scroll to make the chosen *title* in the center of the *view port*
 
