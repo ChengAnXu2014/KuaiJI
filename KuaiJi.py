@@ -21,12 +21,12 @@ class FindInFileCommand(sublime_plugin.TextCommand):
 		titleRegions_list=self.view.find_all(titleRgx)
 		for titleRegion in titleRegions_list:
 			title=self.view.substr(titleRegion)
-			(hierPre,title)=re.match(u'(^\.+)([^.].+)', title).groups()
+			(hierPre,title)=re.match(u'(^\.+)([^.].*)', title).groups()
 			supTitles_dict[hierPre]=title
 			preIndex=preRgx
 			while hierPre != preIndex:
 				if preIndex not in supTitles_dict:
-					supTitles_dict[preIndex]=u'miss'
+					supTitles_dict[preIndex]=u'缺失'
 
 
 				supTitles_list.append(supTitles_dict[preIndex]+u'/')
@@ -38,6 +38,5 @@ class FindInFileCommand(sublime_plugin.TextCommand):
 			supTitles=u''
 
 
-		
-		sublime.status_message(u'found'+str(len(titles_list))+u'titles')
+		sublime.status_message(u'找到'+str(len(titles_list))+u'个标题')
 		self.view.window().show_quick_panel(titles_list, on_done)
