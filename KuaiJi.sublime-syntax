@@ -2,25 +2,30 @@
 ---
 file_extensions:
   - kj
-scope: string
+scope: string source.kuaiji
 
 variables:
-  spenam: 'XML|HTML|YAML|Xml|Html|Yaml|xml|html|yaml|C|c|Python|python|JSON|Json|json|JAVA|Java|java|JavaScript|javascript|js|JS|Js|GIT|git|Git|index|Index|Head|HEAD'
-  wrdpre: '(?<![A-z0-9_])'
-  wrdsuf: '(?![A-z0-9_])'
-  identifier: '{{wrdpre}}[A-z_][A-z0-9_]*{{wrdsuf}}'
-  argsufix: '[''"A-z0-9\[\]<> ,{}=_-]*\)'
-  vartype: 'int|char|str|bool|double|float|long|short|signed|unsigned|void|var|flag|array'
-  stcls: 'Region|Selection|View|Window|Sublime(?! [Tt]ext)|Sublime_plugin|Settings'
-  stins: 'buffer|id|point|region|selection|view|window|sublime(?! [tT]ext)|sublime_plugin|settings|vector'
-  stpath: '[Pp]ackages/|[Uu]ser/|[Ii]nstalled [Pp]ackages/'
-  path: '[A-z0-9/_]+'
-  contype: 'false|true|FALSE|TRUE|False|True|None|none|NONE|NULL|null|Null|'
-  varlag: 'self|'
+  platname: 'XML|HTML|YAML|Xml|Html|Yaml|xml|html|yaml|C|c|Python|python|JSON|Json|json|JAVA|Java|java|JavaScript|javascript|js|JS|Js|GIT|git|Git|index|Index|Head|HEAD'
+  wordprefix: '(?<![A-z0-9_])'
+  wordsufix: '(?![A-z0-9_])'
+  identifier: '{{wordprefix}}[A-z_][A-z0-9_]*{{wordsufix}}'
+  argsufix: '[''"A-z0-9\[\]<> ,{}*=_-]*\)'
+  term: 'bits?|byte|words?|flag|pair|[iI]d|ID'
+  commonvar: 'int|char|str|bool|double|float|long|short|signed|unsigned|void|var'
+  mudule: 'numbers|string|re|os(\.path)?|sys|math|cmath'
+  class: 'Edit|Region|Selection|View|Window|Sublime(?! [Tt]ext)|Sublime_plugin|Settings|(?<=numbers\.)Real|(?<=numbers\.)Integral'
+  instance: 'edit|point|region|selection|view|window|sublime(?! [tT]ext)|sublime_plugin|settings|vector'
+  property: '(?<=sys\.)byteorder'
+  constname: 'self|false|true|FALSE|TRUE|False|True|None|none|NONE|NULL|null|Null|'
+  platvar: 'buffer|complex|list|dict|tuple|memoryview|bytes|bytearray'
+  platfunction: 'classmethod|staticmethod'
   keyctrl: 'import|if|for|while|else|elif|continue|break|return'
+  keyopr: 'not|and|or|is|in'
 
 contexts:
   main:
+    - match: '^!: '
+      scope: invalid.illegal
     - match: '^\.+[^.].*:$'
       scope: invalid.illegal
     - match: '^-.*:$'
@@ -34,23 +39,34 @@ contexts:
 
     - match: '([0-9][0-9.]*[0-9])|[0-9]'
       scope: constant.numeric
-    - match: '[-+=*/%]'
-      scope: keyword.operator
+    - match: 'r?[bu]?(?=[''"])'
+      scope: storage.type.string
 
 
-    - match: '{{wrdpre}}({{spenam}}){{wrdsuf}}'
+
+    - match: '{{wordprefix}}({{term}}){{wordsufix}}'
+      scope: constant.numeric variable.function source.yaml string.unquoted.plain.out.yaml markup.italic
+    - match: '{{wordprefix}}({{mudule}}){{wordsufix}}'
       scope: constant.numeric variable.function source.yaml string.unquoted.plain.out.yaml
-    - match: '{{wrdpre}}({{keyctrl}}){{wrdsuf}}'
+    - match: '[-+=/*%]|{{wordprefix}}({{keyopr}}){{wordsufix}}'
+      scope: keyword.operator
+    - match: '{{wordprefix}}({{platname}}){{wordsufix}}'
+      scope: constant.numeric variable.function source.yaml string.unquoted.plain.out.yaml
+    - match: '{{wordprefix}}({{keyctrl}}){{wordsufix}}'
       scope: keyword.control
-    - match: '{{wrdpre}}({{varlag}}){{wrdsuf}}'
-      scope: variable.language
-    - match: '{{wrdpre}}({{stins}}){{wrdsuf}}'
+    - match: '{{wordprefix}}({{platvar}}){{wordsufix}}'
+      scope: support.type
+    - match: '{{wordprefix}}({{platfunction}}){{wordsufix}}'
+      scope: support.function
+    - match: '{{wordprefix}}({{property}}){{wordsufix}}'
       scope: entity.name.class markup.italic
-    - match: '{{wrdpre}}({{stcls}}){{wrdsuf}}'
+    - match: '{{wordprefix}}({{instance}}){{wordsufix}}'
+      scope: entity.name.class markup.italic
+    - match: '{{wordprefix}}({{class}}){{wordsufix}}'
       scope: entity.name.class
-    - match: '{{wrdpre}}({{vartype}}){{wrdsuf}}'
+    - match: '{{wordprefix}}({{commonvar}}){{wordsufix}}'
       scope: storage.type
-    - match: '{{wrdpre}}({{contype}}){{wrdsuf}}'
+    - match: '{{wordprefix}}({{constname}}){{wordsufix}}'
       scope: constant.language
     - match: '({{identifier}})\s*(\()(?={{argsufix}})'
       captures:
