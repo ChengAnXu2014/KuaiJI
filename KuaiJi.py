@@ -3,7 +3,7 @@ import re
 import sublime
 import sublime_plugin
 
-class FindInFileCommand(sublime_plugin.TextCommand):
+class KuaijiFindCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 		def on_done(index):
 			if index >= 0:
