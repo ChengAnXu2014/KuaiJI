@@ -1,13 +1,12 @@
 [
 {
-	"id": "kuai-ji",
-	"caption": "KuaiJi",
+	"id": "anxu",
+	"caption": "AnXu",
 	"children":
 	[
 		{
-			"id" : "find-in-file",
-			"caption" : "Find In File",
-			"command" : "find_in_file"
+			"caption" : "KuaiJi Find",
+			"command" : "kuaiji_find"
 		}
 	]
 }
