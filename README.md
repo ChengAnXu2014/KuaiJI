@@ -23,12 +23,12 @@ The non-top-level *title*s in the *quick panel*, will have their suplevel *title
 
 # How to use *KuaiJi*?
 Open a file named `*.kj`, which contain *title*s in it.  
-Use **KuaiJi => Find In File** menu or `alt+m` shortcut to invoke the *quick panel*.  
+Use **AnXu => Kuaiji Find** menu or `alt+m` shortcut to invoke the *quick panel*.  
 Then click one of the *title*s shown in the *quick panel*, current *view* will scroll to make the chosen *title* in the center of the *view port*
 
 
 # Customization
-The command binded to **KuaiJi => Find In File** menu and `alt+m` shortcut is `kuaiji_find`,
+The command binded to **AnXu => Kuaiji Find** menu and `alt+m` shortcut is `kuaiji_find`,
  or in *camel mode* `KuaijiFind`.  
 You can use it to customize the menu and shortcut.
 
