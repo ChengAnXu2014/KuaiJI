@@ -28,8 +28,8 @@ Then click one of the *title*s shown in the *quick panel*, current *view* will s
 
 
 # Customization
-The command binded to **KuaiJi => Find In File** menu and `alt+m` shortcut is `find_in_file`,
- or in *camel mode* `FindInFile`.  
+The command binded to **KuaiJi => Find In File** menu and `alt+m` shortcut is `kuaiji_find`,
+ or in *camel mode* `KuaijiFind`.  
 You can use it to customize the menu and shortcut.
 
 
