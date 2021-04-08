@@ -1,6 +1,6 @@
 [
 	{
 		"keys": ["alt+m"],
-		"command": "find_in_file"
+		"command": "kuaiji_find"
 	}
 ]
