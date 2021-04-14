@@ -1,4 +1,4 @@
-#下面有中文介绍
+# 下面有中文介绍
 
 ## Why is KuaiJi useful?
 *KuaiJi* can help developers to read and refer their note files more easily.  
