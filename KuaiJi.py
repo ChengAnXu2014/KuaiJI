@@ -20,6 +20,7 @@ class KuaijiFindCommand(sublime_plugin.TextCommand):
 		for titleRegion in titleRegions_list:
 			title=self.view.substr(titleRegion)
 			(hierPre,title)=re.match('(^'+re.escape(preRgx)+'+)([^'+preRgx+'].*)', title).groups()
+			
 			while len(supTitles_list) < len(hierPre):
 				if len(supTitles_list) == len(hierPre)-1:
 					supTitles_list.append(title)
@@ -27,6 +28,7 @@ class KuaijiFindCommand(sublime_plugin.TextCommand):
 					supTitles_list.append('miss')
 
 			supTitles_list[len(hierPre)-1]=title
+			del supTitles_list[len(hierPre):]
 
 			titles_list.append([title,supSeparate.join(supTitles_list[0:len(hierPre)-1])])
 
